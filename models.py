@@ -20,6 +20,14 @@ class User(Base):
 		return pbkdf2_sha256.verify(password, self.password_hash)
 
 
+class OAuth_User(Base):
+	__tablename__ = 'oauth_user'
+	id = Column(Integer, primary_key=True)
+	username = Column(String)
+	email = Column(String)
+	picture = Column(String(250))
+	oauth = Column(String)
+
 class Category(Base):
 	__tablename__ = 'category'
 	id = Column(Integer, primary_key = True)
