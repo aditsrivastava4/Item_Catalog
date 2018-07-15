@@ -1,0 +1,19 @@
+{% extends 'index.htm'l %}
+{% block body %}
+<h3>Add Item</h3>
+
+	<form method="POST">
+		<label>Title</label>
+		<input class="form-control" type="text" name="title">
+		<label>Description</label>
+		<input class="form-control" type="text" name="description">
+		<label>Category:</label>
+				<select class="form-control" name="category">
+					{% for category in categories %}
+						<option value="{{ category }}">{{ category }}</option>
+					{% endfor %}
+			  </select>
+		<input class="btn btn-default" type="submit" name="Add" value="Add">
+	</form>
+
+{% endblock %}
