@@ -32,3 +32,30 @@ def get_OAuthUser(email):
 	data = session.query(OAuth_User).filter_by(email = email).one_or_none()
 	session.close_all()
 	return data
+
+def get_User(email):
+	session = DBSession()
+	data = session.query(User).filter_by(email = email).one_or_none()
+	session.close_all()
+	return data
+
+def verify_UserPassword(email, password):
+	session = DBSession()
+	data = session.query(User).filter_by(email = email).one_or_none()
+	result = data.verify_password(password)
+	session.close_all()
+	return result
+
+def add_SignUp(user_data):
+	data = get_User(user_data['email'])
+	if not data:
+		session = DBSession()
+		#print(user_data['username'],' = ',user_data['email'],' = ',user_data['password'])
+		user = User(
+			username = user_data['username'],
+			email = user_data['email']
+		)
+		user.hash_password(user_data['password'])
+		session.add(user)
+		session.commit()
+		session.close_all()

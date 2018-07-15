@@ -7,8 +7,9 @@
 	<div class="col-md-4"></div>
 	<div class="col-md-4">
 		<form method="POST">
-			<label>Username:</label>
-			<input class="form-control" id="email" type="text" name="username"><br>
+			<input type='hidden' name='state' value='{{ STATE }}' />
+			<label>Email:</label>
+			<input class="form-control" id="email" type="text" name="email"><br>
 
 			<label>Password:</label>
 			<input class="form-control" id="pwd" type="password" name="password"><br>

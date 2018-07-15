@@ -30,15 +30,50 @@ def index():
 
 
 
-
-
-@app.route('/login')
-def login():
-	if login_session['loggedIn']:
+@app.route('/signup', methods = ['GET','POST'])
+def signup():
+	if request.method == 'GET':
+		return render_template('signup.html', loggedIn = login_session['loggedIn'])
+	if request.method == 'POST':
+		data = request.form
+		login_session['OAuth'] = 'local'
+		login_session['username'] = data['username']
+		login_session['password'] = data['password']
+		login_session['email'] = data['email']
+		login_session['loggedIn'] = True
+		#print(login_session)
+		crud.add_SignUp(login_session)
+		del login_session['password']
 		return redirect('/')
-	state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-	login_session['state'] = state
-	return render_template('login.html', STATE=state)
+
+
+@app.route('/login', methods = ['GET','POST'])
+def login():
+	if request.method == 'GET':
+		if login_session['loggedIn']:
+			return redirect('/')
+		state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+		login_session['state'] = state
+		return render_template('login.html', STATE=state)
+	if request.method == 'POST':
+		data = request.form
+		if login_session['state'] != data['state']:
+			response = make_response(json.dumps('Invalid state parameter.'), 401)
+			response.headers['Content-Type'] = 'application/json'
+			return redirect('/login')
+
+		if not crud.get_User(data['email']):
+			response = make_response(json.dumps('User Does not Exist'), 404)
+			response.headers['Content-Type'] = 'application/json'
+			return redirect('/login')
+
+		if crud.verify_UserPassword(data['email'], data['password']):
+			login_session['OAuth'] = 'local'
+			login_session['username'] = crud.get_User(data['email']).username
+			login_session['email'] = data['email']
+			login_session['loggedIn'] = True
+		
+		return redirect('/')
 
 
 @app.route('/G_OAuth', methods=['GET','POST'])
@@ -124,6 +159,12 @@ def logout():
 			return redirect('/G_Logout')
 		if login_session['OAuth'] == 'facebook':
 			return redirect('/fb_Logout')
+
+		if login_session['OAuth'] == 'local':
+			del login_session['username']
+			del login_session['email']
+			del login_session['OAuth']
+			login_session['loggedIn'] = False
 	return redirect('/')
 
 @app.route('/G_Logout')
