@@ -6,9 +6,13 @@ engine = create_engine('sqlite:///ItemCatalog.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 
-def getCategory():
+def getCategory(category = None):
 	session = DBSession()
-	data = session.query(Category).all()
+
+	if category == None:
+		data = session.query(Category).order_by(Category.name).all()
+	else:
+		data = session.query(Category).filter_by(name = category).one_or_none()
 	session.close_all()
 	return data
 
@@ -59,3 +63,52 @@ def add_SignUp(user_data):
 		session.add(user)
 		session.commit()
 		session.close_all()
+
+
+def addCategory(category):
+	session = DBSession()
+	if not getCategory(category):
+		newCategory = Category(name = category)
+		session.add(newCategory)
+		session.commit()
+	session.close_all()
+
+
+def getItem(category = None, item = None):
+	session = DBSession()
+	if category == None and item == None:
+		session.close_all()
+		return 'Data Not Provided'
+	else:
+		data = None
+		if item == None:
+			category = getCategory(category)
+			if category:
+				data = session.query(Category_Items).filter_by(category = category).all()
+		else:
+			data = session.query(Category_Items).filter_by(item = item).one_or_none()
+		session.close_all()
+		return data
+
+
+def addItems(category, itemData):
+	session = DBSession()
+	category = getCategory(category)
+	if category:
+		if not getItem(item = itemData['name']):
+			item = Category_Items(
+				item = itemData['name'],
+				description = itemData['description'],
+				author = itemData['author'],
+				publisher = itemData['publisher'],
+				category = category
+			)
+			session.add(item)
+			session.commit()
+		else:
+			session.close_all()
+			return 'Item already exist'
+	else:
+		session.close_all()
+		return 'Category doesnot exist'
+	session.close_all()

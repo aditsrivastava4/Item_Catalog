@@ -33,6 +33,8 @@ def index():
 @app.route('/signup', methods = ['GET','POST'])
 def signup():
 	if request.method == 'GET':
+		if login_session['loggedIn']:
+			return redirect('/')
 		return render_template('signup.html', loggedIn = login_session['loggedIn'])
 	if request.method == 'POST':
 		data = request.form
@@ -274,16 +276,24 @@ def fbdisconnect():
 
 
 @app.route('/catalog/<string:category>/items')
-def items(category):
-	return category
+def itemsList(category):
+	data = crud.getItem(category)
+	print(data)
+
+	return render_template(
+		'items.html',
+		items = data, 
+		category = category, 
+		loggedIn = login_session['loggedIn']
+	)
+
+@app.route('/catalog/<string:category>/<int:item_id>')
+def item(category, item_id):
+	return '{} = {}'.format(category,item_id)
 
 @app.route('/catalog/<string:category>/newItem')
 def new_item(category):
 	return category
-
-@app.route('/catalog/<string:category>/<string:item>')
-def itemsList(category, item):
-	return '{} = {}'.format(category,item)
 
 @app.route('/catalog/<string:category>/<string:item>/edit')
 def edit_items(category, item):
