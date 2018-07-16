@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+{% block body %}
+
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<h1>Category - {{ category }}</h1>
+		</div>
+	</div>
+	<div class="row">
+			{% for item in items %}
+				<a href="{{ item.item_id }}">
+					<div class="col-md-6 text-center category">
+						<h3>{{ item.item }}</h3>
+						<h5>Author: {{ item.author }}</h5>
+					</div>
+				</a>
+			{% endfor %}
+	</div>
+{% endblock %}
