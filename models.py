@@ -48,6 +48,8 @@ class Category_Items(Base):
 	item_id = Column(Integer, primary_key = True)
 	item = Column(String)
 	description = Column(String)
+	author = Column(String)
+	publisher = Column(String)
 
 	category_id = Column(Integer, ForeignKey('category.id'))
 	category = relationship(Category)
@@ -60,6 +62,8 @@ class Category_Items(Base):
 			'items': {
 				'item_id': self.item_id,
 				'item': self.item,
+				'author': self.author,
+				'publisher': self.publisher,
 				'description': self.description,
 			}
 		}
