@@ -278,7 +278,6 @@ def fbdisconnect():
 @app.route('/catalog/<string:category>/items')
 def itemsList(category):
 	data = crud.getItem(category)
-	print(data)
 
 	return render_template(
 		'items.html',

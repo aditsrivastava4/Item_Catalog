@@ -28,8 +28,11 @@
 		
 
 		<style type="text/css">
-			.category:hover {
-				box-shadow: 5px 5px 5px grey;
+			@media (min-width: 992px) {
+				.category:hover {
+					box-shadow: 5px 5px 5px grey;
+					background-color: #fff;
+				}
 			}
 			.pointer {
 				cursor: pointer;
@@ -38,34 +41,50 @@
 				text-decoration: none;
 				color: inherit;
 			}
+			.container-fluid {
+				padding-right: inherit;
+				padding-left: inherit;
+			}
+			.navbar-header, .paddingul {
+				padding-right: 15px;
+				padding-left: 15px;
+			}
+			body {
+				background-color: #ececec;
+			}
+			.navbar-default {
+				background-color: #fff;
+			}
 		</style>
 
 	</head>
 	<body>
-		<div class="container">
+		<div class="container-fluid">
 			<nav class="navbar navbar-default">
 				<div class="container-fluid">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
 						</button>
 						<a class="navbar-brand" href="/"><strong>Item Catalog</strong></a>
 					</div>
-					<ul class="nav navbar-nav navbar-right">
-						{% if not loggedIn %}
-							<li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-							<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-						{% else %}
-							<li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-						{% endif %}
-					</ul>
+					<div id="navbar" class="navbar-collapse collapse">
+						<ul class="nav navbar-nav navbar-right paddingul">
+							{% if not loggedIn %}
+								<li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+								<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+							{% else %}
+								<li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+							{% endif %}
+						</ul>
+					</div>
 				</div>
 			</nav>
-		
-
+		</div>
+		<div class="container">
 			{% block body %}
 			{% endblock %}
 		</div>
