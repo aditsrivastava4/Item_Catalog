@@ -2,17 +2,21 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, User, OAuth_User, Category, Category_Items
 import json
+
 engine = create_engine('sqlite:///ItemCatalog.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 
-def getCategory(category = None):
+def getCategory(category = None, category_id = None):
 	session = DBSession()
 
-	if category == None:
+	if category == None and category_id == None:
 		data = session.query(Category).order_by(Category.name).all()
 	else:
-		data = session.query(Category).filter_by(name = category).one_or_none()
+		if category_id == None:
+			data = session.query(Category).filter_by(name = category).one_or_none()
+		else:
+			data = session.query(Category).filter_by(id = category_id).one_or_none()
 	session.close_all()
 	return data
 
@@ -74,28 +78,38 @@ def addCategory(category):
 	session.close_all()
 
 
-def getItem(category = None, item = None):
-	session = DBSession()
-	if category == None and item == None:
-		session.close_all()
+
+
+
+
+def getItem(category = None, item_id = None, item_name = None):
+	if category == None and item_id == None and item_name == None:
 		return 'Data Not Provided'
 	else:
+		session = DBSession()
 		data = None
-		if item == None:
+		if item_id == None and item_name == None:
 			category = getCategory(category)
 			if category:
 				data = session.query(Category_Items).filter_by(category = category).all()
+
 		else:
-			data = session.query(Category_Items).filter_by(item = item).one_or_none()
+			if item_name == None:
+				data = session.query(Category_Items).filter_by(item_id = item_id).one_or_none()
+			else:
+				data = session.query(Category_Items).filter_by(item = item_name).one_or_none()
+
 		session.close_all()
 		return data
+
+
 
 
 def addItems(category, itemData):
 	session = DBSession()
 	category = getCategory(category)
 	if category:
-		if not getItem(item = itemData['name']):
+		if not getItem(item_name = itemData['name']):
 			item = Category_Items(
 				item = itemData['name'],
 				description = itemData['description'],
@@ -112,3 +126,62 @@ def addItems(category, itemData):
 		session.close_all()
 		return 'Category doesnot exist'
 	session.close_all()
+
+
+
+def updateItem(form_data, item_id):
+	item = getItem(item_id = item_id)
+
+	if item != None:
+		session = DBSession()
+
+		if form_data['title']:
+			item.item = form_data['title']
+
+		if form_data['author']:
+			item.author = form_data['author']
+
+		if form_data['publisher']:
+			item.publisher = form_data['publisher']
+
+		if form_data['description']:
+			item.description = form_data['description']
+
+		#print(form_data['category'])
+		# print(getCategory(category_id = item.category_id).name)
+
+		if form_data['category'] != getCategory(category_id = item.category_id).name:
+			print(item.category_id)
+			item.category_id = getCategory(form_data['category']).id
+			print(item.category_id)
+
+
+		session.add(item)
+		session.commit()
+		session.close_all()
+	else:
+		return '''Item Don't Exist'''
+
+def deleteItem(item_id):
+	item = getItem(item_id = item_id)
+	if item != None:
+		session = DBSession()
+		session.delete(item)
+		session.commit()
+		session.close_all()
+	else:
+		return '''Item Don't Exist'''
+	print(item)
+
+# def dataA():
+# 	session = DBSession()
+# 	result = {'response': 200, 'result': []}
+# 	data = session.query(Category).all()
+# 	for y in data:
+# 		cat = y.serialize
+# 		it = session.query(Category_Items).filter_by(category = y).all()
+
+# 		cat['items'] = [item.serialize for item in it]
+# 		result['result'].append(cat)
+# 	session.close_all()
+# 	return result
