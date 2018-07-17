@@ -1,18 +1,83 @@
 {% extends 'index.html' %}
 {% block body %}
-<h3>Edit Item {{ item }}</h3>
+	<div class="row">
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+		<div class="col-sm-8 col-md-8 col-lg-8 text-center">
+			<h3>Edit Book Details</h3>
+		</div>
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+	</div>
 
-	<form method="POST">
-		<label>Title</label>
-		<input class="form-control" type="text" name="title">
-		<label>Description</label>
-		<input class="form-control" type="text" name="description">
-		<label>Category:</label>
-				<select class="form-control" name="category">
-					{% for category in categories %}
-						<option value="{{ category }}">{{ category }}</option>
-					{% endfor %}
-			  </select>
-		<input class="btn btn-default" type="submit" name="Update" value="Update">
-	</form>
+	<div class="row">
+
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+
+		<div class="col-sm-8 col-md-8 col-lg-8 text-center">
+			<form class="form-horizontal" method="POST">
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Title:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="title" placeholder="{{ item.item }}">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Author:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="author" placeholder="{{ item.author }}">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label col-sm-2">Publisher:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="publisher" placeholder="{{ item.publisher }}">
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Description:</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" type="text" name="description" placeholder="{{ item.description }}" rows="4" cols="50"></textarea>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Category:</label>
+					<div class="col-sm-10">
+						<select class="form-control" name="category">
+							{% for category in categories %}
+
+								{% if category.name == selectedCategory %}
+									<option value="{{ category.name }}" selected>{{ category.name }}</option>
+								{% else %}
+									<option value="{{ category.name }}">{{ category.name }}</option>
+								{% endif %}
+
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+
+
+				<div class="form-group">        
+					<div class="col-sm-offset-2 col-sm-10">
+						<input class="btn btn-default" type="submit" name="Update" value="Update">
+						<input class="btn btn-default" type="button" name="Cancel" value="Cancel" onclick = "cancel()">
+					</div>
+				</div>
+			</form>
+
+			<script type="text/javascript">
+				function cancel() {
+					window.history.back();
+				}
+			</script>
+		</div>
+
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+	</div>
 {% endblock %}

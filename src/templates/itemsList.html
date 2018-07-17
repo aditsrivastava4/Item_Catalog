@@ -11,8 +11,8 @@
 		{% for item in items %}
 		<div class="row">
 			<div class="col-sm-2 col-md-2 col-lg-2"></div>
-			<a href="{{ item.item_id }}">
-				<div class="col-sm-8 col-md-8 col-lg-8 text-center category">
+			<a class="aTag" href="{{ item.item_id }}">
+				<div id="bgColor" class="col-sm-8 col-md-8 col-lg-8 text-center category">
 					<h2>{{ item.item }}</h2>
 					<h5>Author: {{ item.author }}</h5>
 				</div>

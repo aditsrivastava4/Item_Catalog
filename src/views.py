@@ -77,7 +77,7 @@ def login():
 		
 		return redirect('/')
 
-
+# Google OAuth Login
 @app.route('/G_OAuth', methods=['GET','POST'])
 def googleLogin():
 	if request.args.get('state') != login_session['state']:
@@ -169,6 +169,7 @@ def logout():
 			login_session['loggedIn'] = False
 	return redirect('/')
 
+# Google OAuth Logout
 @app.route('/G_Logout')
 def googleLogout():
 	access_token = login_session.get('access_token')
@@ -180,8 +181,8 @@ def googleLogout():
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
-	print('result is ')
-	print(result)
+	#print('result is ')
+	#print(result)
 	if result['status'] == '200':
 		del login_session['access_token']
 		del login_session['gplus_id']
@@ -199,7 +200,7 @@ def googleLogout():
 		return response
 
 
-# Facebook OAuth
+# Facebook OAuth Login
 @app.route('/fb_OAuth', methods=['POST'])
 def facebookLogin():
 	if request.args.get('state') != login_session['state']:
@@ -254,7 +255,7 @@ def facebookLogin():
 	return 'Logged In'
 
 
-
+# Facebook OAuth Logout
 @app.route('/fb_Logout')
 def fbdisconnect():
 	facebook_id = login_session['facebook_id']
@@ -277,10 +278,10 @@ def fbdisconnect():
 
 @app.route('/catalog/<string:category>/items')
 def itemsList(category):
-	data = crud.getItem(category)
+	data = crud.getItem(category = category)
 
 	return render_template(
-		'items.html',
+		'itemsList.html',
 		items = data, 
 		category = category, 
 		loggedIn = login_session['loggedIn']
@@ -288,19 +289,59 @@ def itemsList(category):
 
 @app.route('/catalog/<string:category>/<int:item_id>')
 def item(category, item_id):
-	return '{} = {}'.format(category,item_id)
+	data = crud.getItem(item_id = item_id)
+
+	return render_template(
+		'item.html',
+		item = data,
+		loggedIn = login_session['loggedIn']
+	)
+
+@app.route('/catalog/<string:category>/<int:item_id>/edit', methods = ['GET','POST'])
+def edit_items(category, item_id):
+	if login_session['loggedIn']:
+		data = crud.getItem(item_id = item_id)
+		if request.method == 'GET':
+			categories = crud.getCategory()
+
+			return render_template(
+				'editItem.html',
+				item = data,
+				categories = categories,
+				selectedCategory = category,
+				loggedIn = login_session['loggedIn']
+			)
+
+		if request.method == 'POST':
+			form_data = request.form
+			crud.updateItem(form_data, item_id)
+			return redirect('/catalog/{}/{}'.format(category, item_id))
+	else:
+		return redirect('/login')
+
+
+@app.route('/catalog/<string:category>/<int:item_id>/delete', methods = ['GET','POST'])
+def delete_items(category, item_id):
+
+	if login_session['loggedIn']:
+		data = crud.getItem(item_id = item_id)
+		if request.method == 'GET':
+			return render_template(
+				'deleteItem.html',
+				item = data.item,
+				loggedIn = login_session['loggedIn']
+			)
+
+		if request.method == 'POST':
+			form_data = request.form
+			crud.deleteItem(item_id)
+			return redirect('/catalog/{}/items'.format(category))
+	else:
+		return redirect('/login')
 
 @app.route('/catalog/<string:category>/newItem')
 def new_item(category):
 	return category
-
-@app.route('/catalog/<string:category>/<string:item>/edit')
-def edit_items(category, item):
-	return '{} = {}'.format(category,item)
-
-@app.route('/catalog/<string:category>/<string:item>/delete')
-def delete_items(category, item):
-	return '{} = {}'.format(category,item)
 
 # @app.route('/API')
 # @app.route('/API/catalog.json')

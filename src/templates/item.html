@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+{% block body %}
+
+	<div class="row">
+		<div class="col-sm-12 col-md-12 col-lg-12 text-center">
+			<h1>Book</h1>
+		</div>
+
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+			<div id="bgColor" class="col-sm-8 col-md-8 col-lg-8 text-center">
+				<h2>{{ item.item }}</h2>
+				<h5>Author: {{ item.author }}</h5>
+				<h5>Publisher : {{ item.publisher }}</h5>
+				<h4>Description</h4>
+				<p>{{ item.description }}</p>
+				<p>
+					<a href="{{ item.item_id }}/edit">Edit</a> | 
+					<a href="{{ item.item_id }}/delete">Delete</a>
+				</p>
+			</div>
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+	</div>
+	
+{% endblock %}

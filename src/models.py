@@ -33,6 +33,7 @@ class Category(Base):
 	__tablename__ = 'category'
 	id = Column(Integer, primary_key = True)
 	name = Column(String)
+	#items = relationship('Category_Items', backref = 'category')
 
 	@property
 	def serialize(self):
@@ -43,7 +44,7 @@ class Category(Base):
 
 
 class Category_Items(Base):
-	__tablename__ = 'items'
+	__tablename__ = 'category_items'
 
 	item_id = Column(Integer, primary_key = True)
 	item = Column(String)
@@ -52,20 +53,16 @@ class Category_Items(Base):
 	publisher = Column(String)
 
 	category_id = Column(Integer, ForeignKey('category.id'))
-	category = relationship(Category)
+	category = relationship('Category')
 
 	@property
 	def serialize(self):
 		return {
-			'category_id': self.category.id,
-			'category': self.category.name,
-			'items': {
-				'item_id': self.item_id,
-				'item': self.item,
-				'author': self.author,
-				'publisher': self.publisher,
-				'description': self.description,
-			}
+			'item_id': self.item_id,
+			'item': self.item,
+			'author': self.author,
+			'publisher': self.publisher,
+			'description': self.description,
 		}
 
 engine = create_engine('sqlite:///ItemCatalog.db')
