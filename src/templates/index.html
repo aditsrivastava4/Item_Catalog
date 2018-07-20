@@ -19,6 +19,12 @@
 			crossorigin="anonymous">
 		</script>
 
+		<script type="text/javascript">
+			function cancel() {
+				window.history.back();
+			}
+		</script>
+
 		<link
 			rel="stylesheet"
 			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -80,6 +86,7 @@
 					</div>
 					<div id="navbar" class="navbar-collapse collapse">
 						<ul class="nav navbar-nav navbar-right paddingul">
+							<li><a href="/API">API</a></li>
 							{% if not loggedIn %}
 								<li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 								<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
