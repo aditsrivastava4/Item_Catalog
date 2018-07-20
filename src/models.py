@@ -13,6 +13,7 @@ class User(Base):
 	username = Column(String)
 	email = Column(String)
 	password_hash = Column(String(64))
+	api_key = Column(String(32), nullable=True)
 
 	def hash_password(self, password):
 		self.password_hash = pbkdf2_sha256.hash(password)
@@ -28,6 +29,7 @@ class OAuth_User(Base):
 	email = Column(String)
 	picture = Column(String(250))
 	oauth = Column(String)
+	api_key = Column(String(32), nullable=True)
 
 class Category(Base):
 	__tablename__ = 'category'
