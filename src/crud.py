@@ -106,10 +106,10 @@ def getItem(category = None, item_id = None, item_name = None):
 
 
 def addItems(category, itemData):
-	session = DBSession()
-	category = getCategory(category)
+	category = getCategory(category = category)
 	if category:
 		if not getItem(item_name = itemData['name']):
+			session = DBSession()
 			item = Category_Items(
 				item = itemData['name'],
 				description = itemData['description'],
@@ -119,13 +119,12 @@ def addItems(category, itemData):
 			)
 			session.add(item)
 			session.commit()
-		else:
 			session.close_all()
+			return getItem(item_name = itemData['name']).item_id
+		else:
 			return 'Item already exist'
 	else:
-		session.close_all()
 		return 'Category doesnot exist'
-	session.close_all()
 
 
 
@@ -146,9 +145,6 @@ def updateItem(form_data, item_id):
 
 		if form_data['description']:
 			item.description = form_data['description']
-
-		#print(form_data['category'])
-		# print(getCategory(category_id = item.category_id).name)
 
 		if form_data['category'] != getCategory(category_id = item.category_id).name:
 			print(item.category_id)
@@ -173,15 +169,33 @@ def deleteItem(item_id):
 		return '''Item Don't Exist'''
 	print(item)
 
-# def dataA():
-# 	session = DBSession()
-# 	result = {'response': 200, 'result': []}
-# 	data = session.query(Category).all()
-# 	for y in data:
-# 		cat = y.serialize
-# 		it = session.query(Category_Items).filter_by(category = y).all()
+def catalog_API():
+	session = DBSession()
+	result = {'response': 200, 'results': []}
+	data = session.query(Category).all()
+	for y in data:
+		cat = y.serialize
+		items = session.query(Category_Items).filter_by(category = y).all()
+		cat['items'] = [item.serialize for item in items]
+		result['results'].append(cat)
+	session.close_all()
+	return result#json.dumps(result, indent=4, sort_keys=True)
 
-# 		cat['items'] = [item.serialize for item in it]
-# 		result['result'].append(cat)
-# 	session.close_all()
-# 	return result
+def category_API():
+	session = DBSession()
+	categories = session.query(Category).all()
+	result = {'response': 200, 'results': [category.serialize for category in categories]}
+	session.close_all()
+	return result#json.dumps(result, indent=4, sort_keys=True)
+
+def item_API(category):
+	session = DBSession()
+	category = getCategory(category)
+	items = getItem(category.name)
+	category = category.serialize
+
+	category['items'] = [item.serialize for item in items]
+	result = {'response': 200, 'results': category}
+
+	session.close_all()
+	return result#json.dumps(result, indent=4, sort_keys=True)
