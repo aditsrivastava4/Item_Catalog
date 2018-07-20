@@ -1,19 +1,67 @@
-{% extends 'index.htm'l %}
+{% extends 'index.html' %}
 {% block body %}
-<h3>Add Item</h3>
+	<div class="row">
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+		<div class="col-sm-8 col-md-8 col-lg-8 text-center">
+			<h3>Add Book</h3>
+		</div>
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+	</div>
 
-	<form method="POST">
-		<label>Title</label>
-		<input class="form-control" type="text" name="title">
-		<label>Description</label>
-		<input class="form-control" type="text" name="description">
-		<label>Category:</label>
-				<select class="form-control" name="category">
-					{% for category in categories %}
-						<option value="{{ category }}">{{ category }}</option>
-					{% endfor %}
-			  </select>
-		<input class="btn btn-default" type="submit" name="Add" value="Add">
-	</form>
+	<div class="row">
 
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+
+		<div class="col-sm-8 col-md-8 col-lg-8 text-center">
+			<form class="form-horizontal" method="POST">
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Title:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="name" required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Author:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="author" required>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label col-sm-2">Publisher:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="publisher" required>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Description:</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" type="text" name="description" rows="4" cols="50" required></textarea>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="control-label col-sm-2">Category:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" name="Category" value="{{ category }}" readonly>
+					</div>
+				</div>
+
+
+				<div class="form-group">        
+					<div class="col-sm-offset-2 col-sm-10">
+						<input class="btn btn-default" type="submit" name="Add" value="Add">
+						<input class="btn btn-default" type="button" name="Cancel" value="Cancel" onclick = "cancel()">
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+	</div>
 {% endblock %}
