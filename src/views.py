@@ -339,13 +339,50 @@ def delete_items(category, item_id):
 	else:
 		return redirect('/login')
 
-@app.route('/catalog/<string:category>/newItem')
+@app.route('/catalog/<string:category>/new', methods = ['GET','POST'])
 def new_item(category):
-	return category
+	if login_session['loggedIn']:
+		if request.method == 'GET':
+			category = crud.getCategory(category = category)
 
-# @app.route('/API')
-# @app.route('/API/catalog.json')
+			return render_template(
+				'addItem.html',
+				category = category.name,
+				loggedIn = login_session['loggedIn']
+			)
 
+		if request.method == 'POST':
+			form_data = request.form
+			print(form_data)
+			item_id = crud.addItems(category, form_data)
+			return redirect('/catalog/{}/{}'.format(category, item_id))
+	else:
+		return redirect('/login')
+
+@app.route('/API',methods = ['GET', 'POST'])
+def api():
+	categories = crud.getCategory()
+	return render_template('api.html', categories = categories, loggedIn = login_session['loggedIn'])
+
+@app.route('/API/register', methods = ['POST'])
+def register():
+	if login_session['loggedIn']:
+		return (''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32)))
+	else:
+		return redirect('/login')
+
+@app.route('/API/catalog.json')
+def catalog_json():
+	print(request.args)
+	return jsonify(crud.catalog_API())
+
+@app.route('/API/catalog/category.json')
+def category_json():
+	return jsonify(crud.category_API())
+
+@app.route('/API/<string:category>/items.json')
+def item_json(category):
+	return jsonify(crud.item_API(category))
 
 if __name__ == '__main__':
 	app.secret_key = '_5#y2Ldsfsdf'
