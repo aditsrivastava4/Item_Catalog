@@ -88,7 +88,7 @@ User has to send **GET** request to access API
 }
 ```
 
-* For http://localhost:5000/API/Paperback%20Nonfiction/items.json?api_key=api_key
+* For http://localhost:5000/API/Paperback+Nonfiction/items.json?api_key=api_key
 
 ```
 {
@@ -116,11 +116,29 @@ User has to send **GET** request to access API
 }
 ```
 
+#### Error Response
 * For wrong API key
 
 ```
 {
   "response": 403,
-  "results": "Wrong API key"
+  "result": "Wrong API key"
 }
+```
+* For wrong category
+
+```
+{
+  "response": 404,
+  "result": "Category doesn't Exist"
+}
+```
+
+
+### Access via Python code
+
+```
+import requests
+api_key = 'Your-API-KEY'
+requests.get('http://localhost:5000/API/catalog.json', params={'api_key':api_key}).json()
 ```
