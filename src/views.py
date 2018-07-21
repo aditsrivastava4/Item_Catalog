@@ -366,7 +366,6 @@ def new_item(category):
 def api():
 	if request.method == 'POST':
 		form = request.form
-		print(form)
 		if crud.verify_APIkey(form['api_key']):
 			if form['api_type'] == 'Catalog.json':
 				return redirect(url_for('catalog_json', api_key = form['api_key']))

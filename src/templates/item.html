@@ -13,10 +13,12 @@
 				<h5>Publisher : {{ item.publisher }}</h5>
 				<h4>Description</h4>
 				<p>{{ item.description }}</p>
-				<p>
-					<a href="{{ item.item_id }}/edit">Edit</a> | 
-					<a href="{{ item.item_id }}/delete">Delete</a>
-				</p>
+				{% if loggedIn %}
+					<p>
+						<a href="{{ item.item_id }}/edit">Edit</a> | 
+						<a href="{{ item.item_id }}/delete">Delete</a>
+					</p>
+				{% endif %}
 			</div>
 		<div class="col-sm-2 col-md-2 col-lg-2"></div>
 	</div>
