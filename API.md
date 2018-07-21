@@ -66,6 +66,7 @@ User has to send **GET** request to access API
         }
       ]
     }
+   ]
   }
 
 ```
