@@ -14,7 +14,7 @@ The Book Catalog API endpoint is for the developer's who wants to create a web a
 A set of random string which user can get from [Book Catalog API](http://localhost:5000/API) by logging in and generating the API key. **api_key** is required for all API request.
 *  **category**<br>
 *Datatype* : string<br>
-Book category which user can get from [Book Category](http://localhost:5000/) or by sending a API request to [Book Category API](http://localhost:5000/API/catalog/category.json)
+Book category which user can get from [Book Category](http://localhost:5000/) or by sending a API request to Book Category API.
 
 ### Request
 User has to send **GET** request to access API
