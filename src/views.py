@@ -67,7 +67,7 @@ def login():
 		if not crud.get_User(data['email']):
 			response = make_response(json.dumps('User Does not Exist'), 404)
 			response.headers['Content-Type'] = 'application/json'
-			return redirect('/login')
+			return response
 
 		if crud.verify_UserPassword(data['email'], data['password']):
 			login_session['OAuth'] = 'local'
@@ -278,6 +278,7 @@ def fbdisconnect():
 
 @app.route('/catalog/<string:category>/items')
 def itemsList(category):
+	category = category.replace('+', ' ')
 	data = crud.getItem(category = category)
 
 	return render_template(
@@ -341,6 +342,7 @@ def delete_items(category, item_id):
 
 @app.route('/catalog/<string:category>/new', methods = ['GET','POST'])
 def new_item(category):
+	category = category.replace('+', ' ')
 	if login_session['loggedIn']:
 		if request.method == 'GET':
 			category = crud.getCategory(category = category)
@@ -359,30 +361,81 @@ def new_item(category):
 	else:
 		return redirect('/login')
 
+
 @app.route('/API',methods = ['GET', 'POST'])
 def api():
-	categories = crud.getCategory()
-	return render_template('api.html', categories = categories, loggedIn = login_session['loggedIn'])
+	if request.method == 'POST':
+		form = request.form
+		print(form)
+		if crud.verify_APIkey(form['api_key']):
+			if form['api_type'] == 'Catalog.json':
+				return redirect(url_for('catalog_json', api_key = form['api_key']))
+
+			if form['api_type'] == 'Category.json':
+				return redirect(url_for('category_json', api_key = form['api_key']))
+
+			if form['api_type'] == 'Category_Items.json':
+				category = form['category'].replace(' ', '+')
+				return redirect(url_for('item_json', category = category, api_key = form['api_key']))
+
+
+	if request.method == 'GET':
+		if login_session['loggedIn']:
+			api_key = crud.get_APIkey(login_session)
+			return render_template('api.html', loggedIn = login_session['loggedIn'], api_key = api_key)
+		return render_template('api.html', loggedIn = login_session['loggedIn'])
+
+
 
 @app.route('/API/register', methods = ['POST'])
 def register():
 	if login_session['loggedIn']:
-		return (''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32)))
+		api_key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+		crud.addAPI_key(api_key, login_session)
+		print('api_key = ',api_key)
+		return api_key
 	else:
 		return redirect('/login')
 
+
+
 @app.route('/API/catalog.json')
 def catalog_json():
-	print(request.args)
-	return jsonify(crud.catalog_API())
+	args = request.args
+	if args:
+		if crud.verify_APIkey(args['api_key']):
+			results = {'response': 200, 'results': crud.catalog_API()}
+			return jsonify(results)
+	return jsonify({'response': 403, 'result':'Wrong API key'})
 
-@app.route('/API/catalog/category.json')
+@app.route('/API/catalog/category.json', methods = ['GET','POST'])
 def category_json():
-	return jsonify(crud.category_API())
+	if request.method == 'POST':
+		print(request.form)
+		categories = jsonify(crud.category_API())
+		return categories
+
+	if request.method == 'GET':
+		args = request.args
+		if args:
+			if crud.verify_APIkey(args['api_key']):
+				results = {'response': 200, 'results': crud.category_API()}
+				return jsonify(results)
+		return jsonify({'response': 403, 'result':'Wrong API key'})
 
 @app.route('/API/<string:category>/items.json')
 def item_json(category):
-	return jsonify(crud.item_API(category))
+	category = category.replace('+', ' ')
+	args = request.args
+	if args:
+		if crud.verify_APIkey(args['api_key']):
+			items = crud.item_API(category)
+			if items == None:
+				return jsonify({'response': 404, 'result':'''Category doesn't Exist'''})
+
+			results = {'response': 200, 'results': items}
+			return jsonify(results)
+	return jsonify({'response': 403, 'result':'Wrong API key'})
 
 if __name__ == '__main__':
 	app.secret_key = '_5#y2Ldsfsdf'
