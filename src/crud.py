@@ -78,10 +78,6 @@ def addCategory(category):
 	session.close_all()
 
 
-
-
-
-
 def getItem(category = None, item_id = None, item_name = None):
 	if category == None and item_id == None and item_name == None:
 		return 'Data Not Provided'
@@ -101,8 +97,6 @@ def getItem(category = None, item_id = None, item_name = None):
 
 		session.close_all()
 		return data
-
-
 
 
 def addItems(category, itemData):
@@ -125,7 +119,6 @@ def addItems(category, itemData):
 			return 'Item already exist'
 	else:
 		return 'Category doesnot exist'
-
 
 
 def updateItem(form_data, item_id):
@@ -171,31 +164,75 @@ def deleteItem(item_id):
 
 def catalog_API():
 	session = DBSession()
-	result = {'response': 200, 'results': []}
+	result = []
 	data = session.query(Category).all()
 	for y in data:
 		cat = y.serialize
 		items = session.query(Category_Items).filter_by(category = y).all()
 		cat['items'] = [item.serialize for item in items]
-		result['results'].append(cat)
+		result.append(cat)
 	session.close_all()
-	return result#json.dumps(result, indent=4, sort_keys=True)
+	return result
 
 def category_API():
 	session = DBSession()
 	categories = session.query(Category).all()
-	result = {'response': 200, 'results': [category.serialize for category in categories]}
+	result = [category.serialize for category in categories]
 	session.close_all()
-	return result#json.dumps(result, indent=4, sort_keys=True)
+	return result
 
 def item_API(category):
 	session = DBSession()
 	category = getCategory(category)
+	if category == None:
+		return None
 	items = getItem(category.name)
 	category = category.serialize
 
 	category['items'] = [item.serialize for item in items]
-	result = {'response': 200, 'results': category}
+	result = category
 
 	session.close_all()
-	return result#json.dumps(result, indent=4, sort_keys=True)
+	return result
+
+
+
+def addAPI_key(api_key, login_session):
+	session = DBSession()
+	if login_session['OAuth'] == 'local':
+		user = get_User(login_session['email'])
+		user.api_key = api_key
+		session.add(user)
+		session.commit()
+	else:
+		user = get_OAuthUser(login_session['email'])
+		user.api_key = api_key
+		session.add(user)
+		session.commit()
+	session.close_all()
+
+def verify_APIkey(api_key):
+	session = DBSession()
+	local_User = session.query(User).filter_by(api_key = api_key).one_or_none()
+	if local_User != None:
+		session.close_all()
+		return True
+
+	oauth_User = session.query(OAuth_User).filter_by(api_key = api_key).one_or_none()
+	if oauth_User != None:
+		session.close_all()
+		return True
+	session.close_all()
+	return False
+
+def get_APIkey(login_session):
+	if login_session['OAuth'] == 'local':
+		user = get_User(login_session['email'])
+		if user is not None:
+			return user.api_key
+		return None
+	else:
+		user = get_OAuthUser(login_session['email'])
+		if user is not None:
+			return user.api_key
+		return None
