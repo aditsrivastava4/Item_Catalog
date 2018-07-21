@@ -4,9 +4,9 @@ The Book Catalog API endpoint is for the developer's who wants to create a web a
 
 
 ## Endpoint URL's
-* http://localhost:5000/API/catalog.json
-* http://localhost:5000/API/catalog/category.json
-* http://localhost:5000/API/&lt;string:category&gt;/items.json
+* ```http://localhost:5000/API/catalog.json```
+* ```http://localhost:5000/API/catalog/category.json```
+* ```http://localhost:5000/API/<string:category>/items.json```
 
 ### Parameters
 * **api_key** <br>
