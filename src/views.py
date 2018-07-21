@@ -437,6 +437,13 @@ def item_json(category):
 			return jsonify(results)
 	return jsonify({'response': 403, 'result':'Wrong API key'})
 
+
+@app.route('/API-doc')
+def api_doc():
+	return render_template('apiDoc.html', loggedIn = login_session['loggedIn'])
+
+
+
 if __name__ == '__main__':
 	app.secret_key = '_5#y2Ldsfsdf'
 	app.debug = True
