@@ -139,22 +139,22 @@ AddData.py is being used to get book data from [The New York Times Developer's](
 It is the main module which is used to run the Flask server. All the routes of the website are defined in it.
 
 #### Routes
-* **/** : Home/Index page(Request type GET).
-* **/signup** : Sign up page(Request type GET, POST).
-* **/login** : Login page(Request type GET, POST).
-* **/logout** : To Logout user(Request type GET.
-* **/G_OAuth** : Login user with Google OAuth(Request type POST).
-* **/G_Logout** : Logout Google OAuth user(Request type GET).
-* **/fb_OAuth** : Login user with Facebook OAuth(Request type POST).
-* **/fb_Logout** : Logout Facebook OAuth user(Request type GET).
-* **/catalog/<string:category>/items** : Items List page(Request type GET).
-* **/catalog/<string:category>/<int:item_id>** : Items Detail page(Request type GET).
-* **/catalog/<string:category>/<int:item_id>/edit** : Edit Items Detail page(Request type GET, POST).
-* **/catalog/<string:category>/<int:item_id>/delete** : Delete Item(Request type GET, POST).
-* **/catalog/<string:category>/new** : Add New Item page(Request type GET, POST).
-* **/API** : API key and request page(Request type GET, POST).
-* **/API/register** : Register users API key(Request type POST).
-* **/API/catalog.json** : Request catalog.json API(Request type GET).
-* **/API/catalog/category.json** : Request category.json API(Request type GET, POST).
-* **/API/<string:category>/items.json** : Request item.json API(Request type GET).
-* **/API** : API Documentation page(Request type GET).
+* ```/``` : Home/Index page(Request type GET).
+* ```/signup``` : Sign up page(Request type GET, POST).
+* ```/login``` : Login page(Request type GET, POST).
+* ```/logout``` : To Logout user(Request type GET.
+* ```/G_OAuth``` : Login user with Google OAuth(Request type POST).
+* ```/G_Logout``` : Logout Google OAuth user(Request type GET).
+* ```/fb_OAuth``` : Login user with Facebook OAuth(Request type POST).
+* ```/fb_Logout``` : Logout Facebook OAuth user(Request type GET).
+* ```/catalog/<string:category>/items``` : Items List page(Request type GET).
+* ```/catalog/<string:category>/<int:item_id>``` : Items Detail page(Request type GET).
+* ```/catalog/<string:category>/<int:item_id>/edit``` : Edit Items Detail page(Request type GET, POST).
+* ```/catalog/<string:category>/<int:item_id>/delete``` : Delete Item(Request type GET, POST).
+* ```/catalog/<string:category>/new``` : Add New Item page(Request type GET, POST).
+* ```/API``` : API key and request page(Request type GET, POST).
+* ```/API/register``` : Register users API key(Request type POST).
+* ```/API/catalog.json``` : Request catalog.json API(Request type GET).
+* ```/API/catalog/category.json``` : Request category.json API(Request type GET, POST).
+* ```/API/<string:category>/items.json``` : Request item.json API(Request type GET).
+* ```/API``` : API Documentation page(Request type GET).
