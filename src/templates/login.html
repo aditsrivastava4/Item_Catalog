@@ -15,6 +15,13 @@
 			<input class="form-control" id="pwd" type="password" name="password"><br>
 
 			<p style="color: red;display:none;" >* Invalid username or password</p>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+						{% for message in messages %}
+							<p style="color: red;">* {{ message }}</p>
+						{% endfor %}
+				{% endif %}
+			{% endwith %}
 			<input class="btn btn-default" type="submit" name="Login" value="Login">
 		</form>
 

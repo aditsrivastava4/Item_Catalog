@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for
+from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
 from flask import session as login_session
 import crud
 import random, string
@@ -52,22 +52,25 @@ def signup():
 @app.route('/login', methods = ['GET','POST'])
 def login():
 	if request.method == 'GET':
-		if login_session['loggedIn']:
-			return redirect('/')
+		try:
+			if login_session['loggedIn']:
+				return redirect('/')
+		except:
+			login_session['loggedIn'] = False
 		state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
 		login_session['state'] = state
-		return render_template('login.html', STATE=state)
+		return render_template('login.html', STATE=state, loggedIn = login_session['loggedIn'])
+
+	# POST request
 	if request.method == 'POST':
 		data = request.form
 		if login_session['state'] != data['state']:
-			response = make_response(json.dumps('Invalid state parameter.'), 401)
-			response.headers['Content-Type'] = 'application/json'
-			return redirect('/login')
+			flash('Invalid State Parameter')
+			return redirect(url_for('login'))
 
 		if not crud.get_User(data['email']):
-			response = make_response(json.dumps('User Does not Exist'), 404)
-			response.headers['Content-Type'] = 'application/json'
-			return response
+			flash('User Does not Exist')
+			return redirect(url_for('login'))
 
 		if crud.verify_UserPassword(data['email'], data['password']):
 			login_session['OAuth'] = 'local'
@@ -81,9 +84,8 @@ def login():
 @app.route('/G_OAuth', methods=['GET','POST'])
 def googleLogin():
 	if request.args.get('state') != login_session['state']:
-		response = make_response(json.dumps('Invalid state parameter.'), 401)
-		response.headers['Content-Type'] = 'application/json'
-		return redirect('/login')
+		flash('Invalid State Parameter')
+		return redirect(url_for('login'))
 
 	code = request.data.decode()
 
@@ -110,26 +112,21 @@ def googleLogin():
 	# Verify that the access token is used for the intended user.
 	gplus_id = credentials.id_token['sub']
 	if result['user_id'] != gplus_id:
-		response = make_response(
-			json.dumps("Token's user ID doesn't match given user ID."), 401)
-		response.headers['Content-Type'] = 'application/json'
-		return response
+		flash('''Token's user ID doesn't match given user ID.''')
+		return redirect(url_for('login'))
 
 	# Verify that the access token is valid for this app.
 	if result['issued_to'] != CLIENT_ID:
-		response = make_response(
-			json.dumps("Token's client ID does not match app's."), 401)
-		print("Token's client ID does not match app's.")
-		response.headers['Content-Type'] = 'application/json'
-		return response
+		flash('''Token's client ID does not match app's.''')
+		return redirect(url_for('login'))
 
-	stored_access_token = login_session.get('access_token')
-	stored_gplus_id = login_session.get('gplus_id')
-	if stored_access_token is not None and gplus_id == stored_gplus_id:
-		response = make_response(json.dumps('Current user is already connected.'),
-								 200)
-		response.headers['Content-Type'] = 'application/json'
-		return response
+	# stored_access_token = login_session.get('access_token')
+	# stored_gplus_id = login_session.get('gplus_id')
+	# if stored_access_token is not None and gplus_id == stored_gplus_id:
+	# 	response = make_response(json.dumps('Current user is already connected.'),
+	# 							 200)
+	# 	response.headers['Content-Type'] = 'application/json'
+	# 	return response
 
 	# Store the access token in the session for later use.
 	login_session['access_token'] = credentials.access_token
@@ -174,10 +171,9 @@ def logout():
 def googleLogout():
 	access_token = login_session.get('access_token')
 	if access_token is None:
-		print('Access Token is None', access_token)
-		response = make_response(json.dumps('Current user not connected.'), 401)
-		response.headers['Content-Type'] = 'application/json'
-		return redirect('/login')
+		flash('Current user not connected.')
+		return redirect(url_for('login'))
+
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
@@ -191,8 +187,6 @@ def googleLogout():
 		del login_session['picture']
 		del login_session['OAuth']
 		login_session['loggedIn'] = False
-		response = make_response(json.dumps('Successfully disconnected.'), 200)
-		response.headers['Content-Type'] = 'application/json'
 		return redirect('/')
 	else:
 		response = make_response(json.dumps('Failed to revoke token for given user.', 400))
@@ -204,9 +198,8 @@ def googleLogout():
 @app.route('/fb_OAuth', methods=['POST'])
 def facebookLogin():
 	if request.args.get('state') != login_session['state']:
-		response = make_response(json.dumps('Invalid state parameter.'), 401)
-		response.headers['Content-Type'] = 'application/json'
-		return redirect('/login')
+		flash('Invalid State Parameter')
+		return redirect(url_for('login'))
 
 	access_token = request.data.decode()
 	#print("access token received %s " % access_token)
@@ -220,9 +213,6 @@ def facebookLogin():
 		app_id, app_secret, access_token)
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[1].decode()
-
-
-	#print(app_id,' =============== ', app_secret,' =============== ', access_token)
 
 	# Use token to get user info from API
 	userinfo_url = "https://graph.facebook.com/v2.8/me"
@@ -316,6 +306,7 @@ def edit_items(category, item_id):
 		if request.method == 'POST':
 			form_data = request.form
 			crud.updateItem(form_data, item_id)
+			category = form_data['category'].replace(' ', '+')
 			return redirect('/catalog/{}/{}'.format(category, item_id))
 	else:
 		return redirect('/login')
@@ -391,7 +382,6 @@ def register():
 	if login_session['loggedIn']:
 		api_key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
 		crud.addAPI_key(api_key, login_session)
-		print('api_key = ',api_key)
 		return api_key
 	else:
 		return redirect('/login')
