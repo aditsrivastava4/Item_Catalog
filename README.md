@@ -32,3 +32,60 @@ This project is to create a website that shows the list of categories(Book Categ
 >
 > 		Takes a parameter password(String) as input and
 > 		verify it if matches the stored password_hash using passlib.hash.pbkdf2_sha256.
+
+
+* **OAuth_User**
+> class OAuth_User will store data of users how login with any OAuth service.
+>
+> 	**Parameters**
+>
+> 	**username**: Store Username(String)
+>
+> 	**email**: Store user Email(String)
+>
+> 	**picture**: Store the link to user profile picture(String)
+>
+> 	**oauth**: Store the OAuth service user used(String)
+>
+> 	**api_key**: Store API key(String)
+>
+
+
+* **Category**
+> class Category will store the category name.
+>
+> 	**Parameters**
+>
+> 	**name**: Store the name of category(String)
+>
+> 	**Functions**
+>
+> 	**serialize()**
+>
+> 		Used to convert data in JSON format.
+>
+
+
+* **Category_Item**
+> class Category_Item will store the items detail.
+>
+> 	**Parameters**
+>
+> 	**item**: Store the name of the item(String)
+>
+> 	**description**: Store the description of the item(String)
+>
+> 	**author**: Store the author of the item(String)
+>
+> 	**publisher**: Store the publisher of the item(String)
+>
+> 	**category_id**: Store the Foreign Key from the Category the item is related to(Integer)
+>
+> 	**category**: Will create the relationship between Category_Item and Category
+>
+> 	**Functions**
+>
+> 	**serialize()**
+>
+> 		Used to convert data in JSON format.
+>
