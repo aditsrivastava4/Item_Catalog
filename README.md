@@ -89,3 +89,41 @@ This project is to create a website that shows the list of categories(Book Categ
 >
 > 		Used to convert data in JSON format.
 >
+
+
+### 2. crud.py
+
+* **getCategory(category = None, category_id = None)**: Will return all the categories if no parameters are provided.
+
+* **add_OAuthUser(user_data)**: Users who log in for first time using OAuth are added to the database.
+
+* **get_OAuthUser(email)**: Get detail of OAuth users.
+
+* **get_User(email)**: Get detail of local users.
+
+* **verify_UserPassword(email, password)**: Verify local users password at the time of login.
+
+* **add_SignUp(user_data)**: Users who sign up as local user are added to the database.
+
+* **addCategory(category)**: Add the category to the database.
+
+* **getItem(category = None, item_id = None, item_name = None)**: Get the Item detail on the base of anyone of the above parameters or
+it will return 'Data Not Provided'.
+
+* **addItems(category, itemData)**: Add the new Item to the database and link it to category it is related to.
+
+* **updateItem(form_data, item_id)**: Update the details of existing item.
+
+* **deleteItem(item_id)**: Delete the Item and its details from the database.
+
+* **catalog_API()**: returns all the data in JSON format.
+
+* **category_API()**: returns all the categories data in JSON format.
+
+* **item_API(category)**: returns all the items related to a category JSON format.
+
+* **addAPI_key(api_key, login_session)**: Added the User's or OAuth_User's api_key to their details.
+
+* **verify_APIkey(api_key)**: Verify the api_key of the User or OAuth_User.
+
+* **get_APIkey(login_session)**: Get the api_key of the User or OAuth_User.
