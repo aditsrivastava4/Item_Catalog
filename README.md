@@ -157,4 +157,4 @@ It is the main module which is used to run the Flask server. All the routes of t
 * ```/API/catalog.json``` : Request catalog.json API(Request type GET).
 * ```/API/catalog/category.json``` : Request category.json API(Request type GET, POST).
 * ```/API/<string:category>/items.json``` : Request item.json API(Request type GET).
-* ```/API``` : API Documentation page(Request type GET).
+* ```/API-doc``` : API Documentation page(Request type GET).
