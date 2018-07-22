@@ -158,3 +158,33 @@ It is the main module which is used to run the Flask server. All the routes of t
 * ```/API/catalog/category.json``` : Request category.json API(Request type GET, POST).
 * ```/API/<string:category>/items.json``` : Request item.json API(Request type GET).
 * ```/API-doc``` : API Documentation page(Request type GET).
+
+
+## Dependencies
+
+* **flask** version 1.0.2
+* **oauth2client** version 4.1.2
+* **httplib2** version 0.11.3
+* **requests** version 2.19.1
+* **SQLAlchemy** version 1.2.8
+* **passlib** version 1.7.1
+
+
+## Templates
+* **index.html** : Base Template for all web pages.
+* **catalog.html** : Home template.
+* **itemsList.html** : List of Items template.
+* **item.html** : Item Detail template.
+* **editItem.html** : Edit item template.
+* **deleteItem.html** : Delete item template
+* **addItem.html** : Add item template.
+* **signup.html** : Sign Up page template.
+* **login.html** : Login page template.
+* **apiDoc.html** : API Endpoint Documentation template.
+* **api.html** : API endpoint template.
+
+
+## Static
+### Javascript
+* **api_doc.js** : Javascript for API Documentation.
+* **api.js** : Javascript for API Endpoint request page.
