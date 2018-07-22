@@ -32,7 +32,7 @@ This project is to create a website that shows the list of categories(Book Categ
 >
 > 		Takes a parameter password(String) as input and
 > 		verify it if matches the stored password_hash using passlib.hash.pbkdf2_sha256.
-
+<br>
 
 * **OAuth_User**
 > class OAuth_User will store data of users how login with any OAuth service.
@@ -49,7 +49,7 @@ This project is to create a website that shows the list of categories(Book Categ
 >
 > 	**api_key**: Store API key(String)
 >
-
+<br>
 
 * **Category**
 > class Category will store the category name.
@@ -64,7 +64,7 @@ This project is to create a website that shows the list of categories(Book Categ
 >
 > 		Used to convert data in JSON format.
 >
-
+<br>
 
 * **Category_Item**
 > class Category_Item will store the items detail.
