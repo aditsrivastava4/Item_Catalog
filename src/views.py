@@ -17,7 +17,7 @@ CLIENT_ID = json.loads(
 
 app = Flask(__name__)
 
-
+# Home/Index Page
 @app.route('/')
 def index():
 	categories = crud.getCategory()
@@ -26,10 +26,7 @@ def index():
 	#print(login_session)
 	return render_template('catalog.html', categories = categories, loggedIn = login_session['loggedIn'])
 
-
-
-
-
+# Sign Up local user
 @app.route('/signup', methods = ['GET','POST'])
 def signup():
 	if request.method == 'GET':
@@ -48,7 +45,7 @@ def signup():
 		del login_session['password']
 		return redirect('/')
 
-
+# Login page
 @app.route('/login', methods = ['GET','POST'])
 def login():
 	if request.method == 'GET':
@@ -77,11 +74,11 @@ def login():
 			login_session['username'] = crud.get_User(data['email']).username
 			login_session['email'] = data['email']
 			login_session['loggedIn'] = True
-		
+
 		return redirect('/')
 
 # Google OAuth Login
-@app.route('/G_OAuth', methods=['GET','POST'])
+@app.route('/G_OAuth', methods=['POST'])
 def googleLogin():
 	if request.args.get('state') != login_session['state']:
 		flash('Invalid State Parameter')
@@ -138,7 +135,7 @@ def googleLogin():
 	answer = requests.get(userinfo_url, params=params)
 
 	data = answer.json()
-	
+
 	login_session['OAuth'] = 'google'
 	login_session['username'] = data['name']
 	login_session['picture'] = data['picture']
@@ -148,9 +145,7 @@ def googleLogin():
 	crud.add_OAuthUser(login_session)
 	return 'Logged In'
 
-
-
-
+# logout user
 @app.route('/logout')
 def logout():
 	if login_session['loggedIn']:
@@ -263,9 +258,7 @@ def fbdisconnect():
 	login_session['loggedIn'] = False
 	return redirect('/')
 
-
-
-
+# Items List Page
 @app.route('/catalog/<string:category>/items')
 def itemsList(category):
 	category = category.replace('+', ' ')
@@ -273,11 +266,12 @@ def itemsList(category):
 
 	return render_template(
 		'itemsList.html',
-		items = data, 
-		category = category, 
+		items = data,
+		category = category,
 		loggedIn = login_session['loggedIn']
 	)
 
+# Items Deatil Page
 @app.route('/catalog/<string:category>/<int:item_id>')
 def item(category, item_id):
 	data = crud.getItem(item_id = item_id)
@@ -288,6 +282,7 @@ def item(category, item_id):
 		loggedIn = login_session['loggedIn']
 	)
 
+# Edit Items Detail Page
 @app.route('/catalog/<string:category>/<int:item_id>/edit', methods = ['GET','POST'])
 def edit_items(category, item_id):
 	if login_session['loggedIn']:
@@ -311,7 +306,7 @@ def edit_items(category, item_id):
 	else:
 		return redirect('/login')
 
-
+# Delete Item Page
 @app.route('/catalog/<string:category>/<int:item_id>/delete', methods = ['GET','POST'])
 def delete_items(category, item_id):
 
@@ -331,6 +326,7 @@ def delete_items(category, item_id):
 	else:
 		return redirect('/login')
 
+# Add new Item page
 @app.route('/catalog/<string:category>/new', methods = ['GET','POST'])
 def new_item(category):
 	category = category.replace('+', ' ')
@@ -352,7 +348,7 @@ def new_item(category):
 	else:
 		return redirect('/login')
 
-
+# API key and request page
 @app.route('/API',methods = ['GET', 'POST'])
 def api():
 	if request.method == 'POST':
@@ -375,8 +371,7 @@ def api():
 			return render_template('api.html', loggedIn = login_session['loggedIn'], api_key = api_key)
 		return render_template('api.html', loggedIn = login_session['loggedIn'])
 
-
-
+# Register users API key
 @app.route('/API/register', methods = ['POST'])
 def register():
 	if login_session['loggedIn']:
@@ -386,8 +381,7 @@ def register():
 	else:
 		return redirect('/login')
 
-
-
+# Request catalog.json API
 @app.route('/API/catalog.json')
 def catalog_json():
 	args = request.args
@@ -397,6 +391,7 @@ def catalog_json():
 			return jsonify(results)
 	return jsonify({'response': 403, 'result':'Wrong API key'})
 
+# Request category.json API
 @app.route('/API/catalog/category.json', methods = ['GET','POST'])
 def category_json():
 	if request.method == 'POST':
@@ -412,6 +407,7 @@ def category_json():
 				return jsonify(results)
 		return jsonify({'response': 403, 'result':'Wrong API key'})
 
+#  Request item.json API
 @app.route('/API/<string:category>/items.json')
 def item_json(category):
 	category = category.replace('+', ' ')
@@ -426,11 +422,10 @@ def item_json(category):
 			return jsonify(results)
 	return jsonify({'response': 403, 'result':'Wrong API key'})
 
-
+# API Documentation page
 @app.route('/API-doc')
 def api_doc():
 	return render_template('apiDoc.html', loggedIn = login_session['loggedIn'])
-
 
 
 if __name__ == '__main__':

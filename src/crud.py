@@ -8,6 +8,15 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 
 def getCategory(category = None, category_id = None):
+	"""
+	getCategory(category = None, category_id = None)
+		Will return all the categories if no parameters are provided
+		Parameters
+		category: Name of the category whose data is required (String)
+			Will return data of the category whose name is provided
+		category_id: ID of the category whose data is required (Integer)
+			Will return data of the category whose ID is provided 
+	"""
 	session = DBSession()
 
 	if category == None and category_id == None:
@@ -21,10 +30,15 @@ def getCategory(category = None, category_id = None):
 	return data
 
 def add_OAuthUser(user_data):
+	"""
+	add_OAuthUser(user_data)
+		Users who log in for first time using OAuth are added to the database
+		Parameter
+		user_data: Dict
+	"""
 	data = get_OAuthUser(user_data['email'])
 	if not data:
 		session = DBSession()
-		#print(user_data['username'],' = ',user_data['email'],' = ',user_data['picture'])
 		user = OAuth_User(
 			username = user_data['username'],
 			email = user_data['email'],
@@ -36,18 +50,30 @@ def add_OAuthUser(user_data):
 		session.close_all()
 
 def get_OAuthUser(email):
+	"""
+	get_OAuthUser(email)
+		Get detail of OAuth users
+	"""
 	session = DBSession()
 	data = session.query(OAuth_User).filter_by(email = email).one_or_none()
 	session.close_all()
 	return data
 
 def get_User(email):
+	"""
+	get_User(email)
+		Get detail of local users
+	"""
 	session = DBSession()
 	data = session.query(User).filter_by(email = email).one_or_none()
 	session.close_all()
 	return data
 
 def verify_UserPassword(email, password):
+	"""
+	verify_UserPassword(email, password)
+		Verify local users password at the time of login
+	"""
 	session = DBSession()
 	data = session.query(User).filter_by(email = email).one_or_none()
 	result = data.verify_password(password)
@@ -55,6 +81,10 @@ def verify_UserPassword(email, password):
 	return result
 
 def add_SignUp(user_data):
+	"""
+	add_SignUp(user_data)
+		Users who sign up as local user are added to the database
+	"""
 	data = get_User(user_data['email'])
 	if not data:
 		session = DBSession()
@@ -70,6 +100,10 @@ def add_SignUp(user_data):
 
 
 def addCategory(category):
+	"""
+	addCategory(category)
+		Add the category to the database
+	"""
 	session = DBSession()
 	if not getCategory(category):
 		newCategory = Category(name = category)
@@ -79,6 +113,11 @@ def addCategory(category):
 
 
 def getItem(category = None, item_id = None, item_name = None):
+	"""
+	getItem(category = None, item_id = None, item_name = None)
+		Get the Item detail on the base of anyone of the above parameters or 
+		it will return 'Data Not Provided'
+	"""
 	if category == None and item_id == None and item_name == None:
 		return 'Data Not Provided'
 	else:
@@ -100,6 +139,10 @@ def getItem(category = None, item_id = None, item_name = None):
 
 
 def addItems(category, itemData):
+	"""
+	addItems(category, itemData)
+		Add the new Item to the database and link it to category it is related to.
+	"""
 	category = getCategory(category = category)
 	if category:
 		if not getItem(item_name = itemData['name']):
@@ -122,6 +165,10 @@ def addItems(category, itemData):
 
 
 def updateItem(form_data, item_id):
+	"""
+	updateItem(form_data, item_id)
+		Update the details of existing item
+	"""
 	item = getItem(item_id = item_id)
 
 	if item != None:
@@ -152,6 +199,10 @@ def updateItem(form_data, item_id):
 		return '''Item Don't Exist'''
 
 def deleteItem(item_id):
+	"""
+	deleteItem(item_id)
+		Delete the Item and its details from the database
+	"""
 	item = getItem(item_id = item_id)
 	if item != None:
 		session = DBSession()
@@ -163,6 +214,10 @@ def deleteItem(item_id):
 	print(item)
 
 def catalog_API():
+	"""
+	catalog_API()
+		returns all the data in JSON format
+	"""
 	session = DBSession()
 	result = []
 	data = session.query(Category).all()
@@ -175,6 +230,10 @@ def catalog_API():
 	return result
 
 def category_API():
+	"""
+	category_API()
+		returns all the categories data in JSON format
+	"""
 	session = DBSession()
 	categories = session.query(Category).all()
 	result = [category.serialize for category in categories]
@@ -182,6 +241,10 @@ def category_API():
 	return result
 
 def item_API(category):
+	"""
+	item_API()
+		returns all the items related to a category JSON format
+	"""
 	session = DBSession()
 	category = getCategory(category)
 	if category == None:
@@ -198,6 +261,10 @@ def item_API(category):
 
 
 def addAPI_key(api_key, login_session):
+	"""
+	addAPI_key(api_key, login_session)
+		Added the User's or OAuth_User's api_key to their details 
+	"""
 	session = DBSession()
 	if login_session['OAuth'] == 'local':
 		user = get_User(login_session['email'])
@@ -212,6 +279,10 @@ def addAPI_key(api_key, login_session):
 	session.close_all()
 
 def verify_APIkey(api_key):
+	"""
+	verify_APIkey(api_key)
+		Verify the api_key of the User or OAuth_User
+	"""
 	session = DBSession()
 	local_User = session.query(User).filter_by(api_key = api_key).one_or_none()
 	if local_User != None:
@@ -226,6 +297,10 @@ def verify_APIkey(api_key):
 	return False
 
 def get_APIkey(login_session):
+	"""
+	get_APIkey(login_session)
+		Get the api_key of the User or OAuth_User
+	"""
 	if login_session['OAuth'] == 'local':
 		user = get_User(login_session['email'])
 		if user is not None:
