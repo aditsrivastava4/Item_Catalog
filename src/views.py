@@ -14,15 +14,14 @@ from flask import make_response
 import requests
 
 
-
-
-
 app = Flask(__name__)
+
+# registering blueprint
 app.register_blueprint(google)
 app.register_blueprint(facebook)
+
+
 # Home/Index Page
-
-
 @app.route('/')
 def index():
     categories = crud.getCategory()
@@ -33,9 +32,8 @@ def index():
         categories=categories,
         loggedIn=login_session['loggedIn'])
 
+
 # Sign Up local user
-
-
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'GET':
@@ -55,9 +53,8 @@ def signup():
         del login_session['password']
         return redirect('/')
 
+
 # Login page
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -97,7 +94,6 @@ def login():
 
 
 # logout user
-
 @app.route('/logout')
 def logout():
     if login_session['loggedIn']:
@@ -114,10 +110,7 @@ def logout():
     return redirect('/')
 
 
-
 # Items List Page
-
-
 @app.route('/catalog/<string:category>/items')
 def itemsList(category):
     category = category.replace('+', ' ')
@@ -130,9 +123,8 @@ def itemsList(category):
         loggedIn=login_session['loggedIn']
     )
 
+
 # Items Deatil Page
-
-
 @app.route('/catalog/<string:category>/<int:item_id>')
 def item(category, item_id):
     data = crud.getItem(item_id=item_id)
@@ -143,9 +135,8 @@ def item(category, item_id):
         loggedIn=login_session['loggedIn']
     )
 
+
 # Edit Items Detail Page
-
-
 @app.route(
     '/catalog/<string:category>/<int:item_id>/edit',
     methods=[
@@ -173,9 +164,8 @@ def edit_items(category, item_id):
     else:
         return redirect('/login')
 
+
 # Delete Item Page
-
-
 @app.route(
     '/catalog/<string:category>/<int:item_id>/delete',
     methods=[
@@ -199,9 +189,8 @@ def delete_items(category, item_id):
     else:
         return redirect('/login')
 
+
 # Add new Item page
-
-
 @app.route('/catalog/<string:category>/new', methods=['GET', 'POST'])
 def new_item(category):
     category = category.replace('+', ' ')
@@ -222,9 +211,8 @@ def new_item(category):
     else:
         return redirect('/login')
 
+
 # API key and request page
-
-
 @app.route('/API', methods=['GET', 'POST'])
 def api():
     if request.method == 'POST':
@@ -259,9 +247,8 @@ def api():
                 api_key=api_key)
         return render_template('api.html', loggedIn=login_session['loggedIn'])
 
+
 # Register users API key
-
-
 @app.route('/API/register', methods=['POST'])
 def register():
     if login_session['loggedIn']:
@@ -274,9 +261,8 @@ def register():
     else:
         return redirect('/login')
 
+
 # Request catalog.json API
-
-
 @app.route('/API/catalog.json')
 def catalog_json():
     args = request.args
@@ -286,9 +272,8 @@ def catalog_json():
             return jsonify(results)
     return jsonify({'response': 403, 'result': 'Wrong API key'})
 
+
 # Request category.json API
-
-
 @app.route('/API/catalog/category.json', methods=['GET', 'POST'])
 def category_json():
     if request.method == 'POST':
@@ -304,9 +289,8 @@ def category_json():
                 return jsonify(results)
         return jsonify({'response': 403, 'result': 'Wrong API key'})
 
+
 #  Request item.json API
-
-
 @app.route('/API/<string:category>/items.json')
 def item_json(category):
     category = category.replace('+', ' ')
@@ -322,9 +306,8 @@ def item_json(category):
             return jsonify(results)
     return jsonify({'response': 403, 'result': 'Wrong API key'})
 
+
 # API Documentation page
-
-
 @app.route('/API-doc')
 def api_doc():
     return render_template('apiDoc.html', loggedIn=login_session['loggedIn'])

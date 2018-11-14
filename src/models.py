@@ -37,7 +37,7 @@ class User(Base):
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
 	email = Column(String)
-	password_hash = Column(String(64))
+	password_hash = Column(String(200))
 	api_key = Column(String(32), nullable=True)
 
 	def hash_password(self, password):
@@ -142,5 +142,5 @@ class Category_Items(Base):
 			'description': self.description,
 		}
 
-engine = create_engine('sqlite:///ItemCatalog.db')
+engine = create_engine('postgresql://testDemo2:{}@localhost/demoDB'.format('94532@dit'))
 Base.metadata.create_all(engine)
