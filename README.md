@@ -168,6 +168,7 @@ It is the main module which is used to run the Flask server. All the routes of t
 * **requests** version 2.19.1
 * **SQLAlchemy** version 1.2.8
 * **passlib** version 1.7.1
+* **psycopg2** version 2.7.6.1
 
 
 ## Templates
