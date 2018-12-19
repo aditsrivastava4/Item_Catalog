@@ -6,7 +6,7 @@ import random
 import string
 
 from Google.Google_OAuth import google
-from Facebook.FB_OAuth import facebook
+# from Facebook.FB_OAuth import facebook
 
 import httplib2
 import json
@@ -14,11 +14,11 @@ from flask import make_response
 import requests
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='ic_react/build/static', template_folder='ic_react/build')
 
 # registering blueprint
 app.register_blueprint(google)
-app.register_blueprint(facebook)
+# app.register_blueprint(facebook)
 
 
 # Home/Index Page
@@ -27,10 +27,11 @@ def index():
     categories = crud.getCategory()
     if not login_session:
         login_session['loggedIn'] = False
-    return render_template(
-        'catalog.html',
-        categories=categories,
-        loggedIn=login_session['loggedIn'])
+    return render_template('index.html')
+    # return render_template(
+    #     'catalog.html',
+    #     categories=categories,
+    #     loggedIn=login_session['loggedIn'])
 
 
 # Sign Up local user
@@ -265,12 +266,12 @@ def register():
 # Request catalog.json API
 @app.route('/API/catalog.json')
 def catalog_json():
-    args = request.args
-    if args:
-        if crud.verify_APIkey(args['api_key']):
-            results = {'response': 200, 'results': crud.catalog_API()}
-            return jsonify(results)
-    return jsonify({'response': 403, 'result': 'Wrong API key'})
+    # args = request.args
+    # if args:
+        # if crud.verify_APIkey(args['api_key']):
+    results = {'response': 200, 'results': crud.catalog_API()}
+    return jsonify(results)
+    # return jsonify({'response': 403, 'result': 'Wrong API key'})
 
 
 # Request category.json API
