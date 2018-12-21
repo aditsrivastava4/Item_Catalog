@@ -200,9 +200,7 @@ def updateItem(form_data, item_id):
 
         if form_data['category'] != getCategory(
                 category_id=item.category_id).name:
-            print(item.category_id)
             item.category_id = getCategory(form_data['category']).id
-            print(item.category_id)
 
         session.add(item)
         session.commit()
@@ -224,7 +222,6 @@ def deleteItem(item_id):
         session.close_all()
     else:
         return '''Item Don't Exist'''
-    print(item)
 
 
 def catalog_API():

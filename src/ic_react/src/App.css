@@ -30,3 +30,40 @@
     transform: rotate(360deg);
   }
 }
+
+@media (min-width: 992px) {
+  .category:hover {
+    box-shadow: 5px 5px 5px grey;
+  }
+  #bgColor:hover {
+    background-color: #fff;
+  }
+}
+#DColor {
+  background-color: #fee;
+  padding-bottom: 2%;
+}
+.pointer {
+  cursor: pointer;
+}
+.aTag {
+  text-decoration: none;
+  color: inherit;
+}
+.container-fluid {
+  padding-right: inherit;
+  padding-left: inherit;
+}
+.navbar-header, .paddingul {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+body {
+  background-color: #ececec;
+}
+.navbar-default {
+  background-color: #fff;
+}
+code {
+  background-color: inherit;
+}

@@ -22,8 +22,10 @@ app.register_blueprint(google)
 
 
 # Home/Index Page
-@app.route('/')
-def index():
+# @app.route('/')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     categories = crud.getCategory()
     if not login_session:
         login_session['loggedIn'] = False
@@ -277,18 +279,19 @@ def catalog_json():
 # Request category.json API
 @app.route('/API/catalog/category.json', methods=['GET', 'POST'])
 def category_json():
-    if request.method == 'POST':
-        print(request.form)
-        categories = jsonify(crud.category_API())
-        return categories
+    # if request.method == 'POST':
+    #     print(request.form)
+    #     categories = jsonify(crud.category_API())
+    #     return categories
 
     if request.method == 'GET':
-        args = request.args
-        if args:
-            if crud.verify_APIkey(args['api_key']):
-                results = {'response': 200, 'results': crud.category_API()}
-                return jsonify(results)
-        return jsonify({'response': 403, 'result': 'Wrong API key'})
+        # args = request.args
+        # if args:
+        #     if crud.verify_APIkey(args['api_key']):
+        results = {'response': 200, 'results': crud.category_API()}
+        # print(crud.category_API())
+        return jsonify(results)
+        # return jsonify({'response': 403, 'result': 'Wrong API key'})
 
 
 #  Request item.json API

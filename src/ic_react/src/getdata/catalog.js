@@ -13,25 +13,25 @@ class Catalog extends Component {
 
     getData() {
         let data = [];
-        fetch('/API/catalog.json')
+        fetch('/API/catalog/category.json')
             .then(catalogItem => catalogItem.json())
             .then((result) => {
                 result.results.forEach(item => {
                     data.push(item.category)
-                    // console.log(item.category)
                 });
                 this.setState({
                     isLoaded: true,
                     items: data
                 })
             })
-
-        // return data;
     }
+
+    itemEvent(event) {
+        console.log(event.currentTarget)
+        alert(event)
+    }
+
     render() {
-        // let res = this.getData();
-        // let data = [12424,124,12,41,24,12,5,34,6,7,4,7,657]
-        // console.log(res)
         const { error, isLoaded, items } = this.state;
 
         if (error) {
@@ -42,15 +42,15 @@ class Catalog extends Component {
             return (
                 <div className="container">
                     <div className="row">
+                        <div className="col-md-2"></div>
                         <div className="col-md-8">
-                            <h1>Adit</h1>
                             {
-                                items.map(function(d) {
-                                    console.log(d)
-                                    return <h1>{d}</h1>
+                                items.map((d) => {
+                                    return <h1 onClick={this.itemEvent}>{d}</h1>
                                 })
                             }
                         </div>
+                        <div className="col-md-2"></div>
                     </div>
                 </div>
             );
