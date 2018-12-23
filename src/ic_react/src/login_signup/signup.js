@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
 import Navbar from '../navbar/navbar';
+import Cookies from 'js-cookie'
+import { Redirect } from 'react-router-dom'
 
 class SignUp extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedIn: Cookies.get('loggedIn')
+        };
+    }
     signUp() {
     }
     render() {
+        const { loggedIn } = this.state
+        if(loggedIn) {
+            return (
+                // Redirect to Home page if logged In
+                <Redirect to="/" />
+            )
+        }
+        // else render the SignUp component
         return (
             <div>
                 <Navbar />

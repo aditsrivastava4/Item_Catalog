@@ -15,9 +15,11 @@ class Login extends Component {
         const { loggedIn } = this.state
         if(loggedIn) {
             return (
+                // Redirect to Home page if logged In
                 <Redirect to="/" />
             )
         }
+        // else render the login component
         return (
             <div>
                 <Navbar />
