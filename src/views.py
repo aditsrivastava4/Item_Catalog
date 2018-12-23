@@ -98,20 +98,20 @@ def signup():
 
 
 # logout user
-@app.route('/logout')
-def logout():
-    if login_session['loggedIn']:
-        if login_session['OAuth'] == 'google':
-            return redirect('/G_Logout')
-        if login_session['OAuth'] == 'facebook':
-            return redirect('/fb_Logout')
+# @app.route('/logout')
+# def logout():
+#     if login_session['loggedIn']:
+#         if login_session['OAuth'] == 'google':
+#             return redirect('/G_Logout')
+#         if login_session['OAuth'] == 'facebook':
+#             return redirect('/fb_Logout')
 
-        if login_session['OAuth'] == 'local':
-            del login_session['username']
-            del login_session['email']
-            del login_session['OAuth']
-            login_session['loggedIn'] = False
-    return redirect('/')
+#         if login_session['OAuth'] == 'local':
+#             del login_session['username']
+#             del login_session['email']
+#             del login_session['OAuth']
+#             login_session['loggedIn'] = False
+#     return redirect('/')
 
 
 # Items List Page
