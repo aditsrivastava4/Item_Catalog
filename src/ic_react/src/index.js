@@ -6,12 +6,14 @@ import Navbar from './navbar/navbar'
 import Login from './login/login_index'
 import * as serviceWorker from './serviceWorker';
 import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
+import Logout from './login/logout';
 
 const routing = (
     <Router>
         <Switch>
             <Route exact path="/" component={App} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/logout" component={Logout} />
         </Switch>
     </Router>
 )

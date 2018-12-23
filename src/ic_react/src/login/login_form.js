@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GoogleLogin from 'react-google-login';
+import Cookies from 'js-cookie'
 
 class LoginForm extends Component {
     successG_OAuth(response) {
@@ -7,18 +8,25 @@ class LoginForm extends Component {
         fetch(
             '/G_OAuth',
             {
-                type: 'POST'
+                method: 'post',
+                body: JSON.stringify(response.profileObj)
             })
-            .then(catalogItem => catalogItem.json())
-            .then((result) => {
-                result.results.forEach(item => {
-                    data.push(item.category)
-                });
-                this.setState({
-                    isLoaded: true,
-                    items: data
-                })
-            })
+            .then((gOAuth) => {
+                return gOAuth.json();
+            }).then((data) => {
+                if(data.LoggedIn) {
+                    // document.cookie = "username=" + response.profileObj.name
+                    // document.cookie = "loggedIn=True"
+                    // document.cookie = "type=G_OAuth"
+                    Cookies.set('username', response.profileObj.name)
+                    Cookies.set('loggedIn', true)
+                    Cookies.set('type', 'G_OAuth')
+
+                    setTimeout(function() {
+                        window.location.href = "/";
+                    }, 500);
+                }
+            });
     }
     failG_OAuth(response) {
         console.log(response);
@@ -35,15 +43,7 @@ class LoginForm extends Component {
         
                     <label>Password:</label>
                     <input className="form-control" id="pwd" type="password" name="password" /><br />
-        
-                    {/* <p style="color: red;display:none;" >* Invalid username or password</p>
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                                {% for message in messages %}
-                                    <p style="color: red;">* {{ message }}</p>
-                                {% endfor %}
-                        {% endif %}
-                    {% endwith %} */}
+
                     <input className="btn btn-default" type="submit" name="Login" value="Login" />
                 </form>
         
