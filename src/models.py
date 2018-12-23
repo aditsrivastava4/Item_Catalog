@@ -142,5 +142,5 @@ class Category_Items(Base):
 			'description': self.description,
 		}
 
-engine = create_engine('postgresql://testDemo2:{}@localhost/demoDB'.format('94532@dit'))
+engine = create_engine('sqlite:///ItemCatalog.db')
 Base.metadata.create_all(engine)
