@@ -13,9 +13,6 @@ class Login extends Component {
                             <h3>Login</h3>
                         </div>
                         <div className="col-sm-3 col-md-3 col-lg-3"></div>
-                        <script
-                            dangerouslySetInnerHTML={{__html: console.log('adit')}}>
-                        </script>
                         <LoginForm />
                         <div class="col-sm-3 col-md-3 col-lg-3"></div>
                     </div>

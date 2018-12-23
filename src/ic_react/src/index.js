@@ -11,7 +11,7 @@ const routing = (
     <Router>
         <Switch>
             <Route exact path="/" component={App} />
-            <Route exact path="/loginR" component={Login} />
+            <Route exact path="/login" component={Login} />
         </Switch>
     </Router>
 )

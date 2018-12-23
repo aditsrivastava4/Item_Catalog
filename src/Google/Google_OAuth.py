@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template
+from flask import Flask, Blueprint, render_template, make_response
 from flask import request, redirect, jsonify, url_for, flash
 import httplib2
 import requests
@@ -18,9 +18,9 @@ CLIENT_ID = json.loads(
 
 @google.route('/G_OAuth', methods=['POST'])
 def googleLogin():
-    if request.args.get('state') != login_session['state']:
-        flash('Invalid State Parameter')
-        return redirect(url_for('login'))
+    # if request.args.get('state') != login_session['state']:
+    #     flash('Invalid State Parameter')
+    #     return redirect(url_for('login'))
 
     code = request.data.decode()
 

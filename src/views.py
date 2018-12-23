@@ -26,9 +26,10 @@ app.register_blueprint(google)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def index(path):
-    categories = crud.getCategory()
+    # categories = crud.getCategory()
     if not login_session:
         login_session['loggedIn'] = False
+        login_session['adit'] = 'Sri'
     return render_template('index.html')
     # return render_template(
     #     'catalog.html',
@@ -58,42 +59,42 @@ def signup():
 
 
 # Login page
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'GET':
-        try:
-            if login_session['loggedIn']:
-                return redirect('/')
-        except BaseException:
-            login_session['loggedIn'] = False
-        state = ''.join(
-            random.choice(
-                string.ascii_uppercase +
-                string.digits) for x in range(32))
-        login_session['state'] = state
-        return render_template(
-            'login.html',
-            STATE=state,
-            loggedIn=login_session['loggedIn'])
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'GET':
+#         try:
+#             if login_session['loggedIn']:
+#                 return redirect('/')
+#         except BaseException:
+#             login_session['loggedIn'] = False
+#         state = ''.join(
+#             random.choice(
+#                 string.ascii_uppercase +
+#                 string.digits) for x in range(32))
+#         login_session['state'] = state
+#         return render_template(
+#             'login.html',
+#             STATE=state,
+#             loggedIn=login_session['loggedIn'])
 
-    # POST request
-    if request.method == 'POST':
-        data = request.form
-        if login_session['state'] != data['state']:
-            flash('Invalid State Parameter')
-            return redirect(url_for('login'))
+#     # POST request
+#     if request.method == 'POST':
+#         data = request.form
+#         if login_session['state'] != data['state']:
+#             flash('Invalid State Parameter')
+#             return redirect(url_for('login'))
 
-        if not crud.get_User(data['email']):
-            flash('User Does not Exist')
-            return redirect(url_for('login'))
+#         if not crud.get_User(data['email']):
+#             flash('User Does not Exist')
+#             return redirect(url_for('login'))
 
-        if crud.verify_UserPassword(data['email'], data['password']):
-            login_session['OAuth'] = 'local'
-            login_session['username'] = crud.get_User(data['email']).username
-            login_session['email'] = data['email']
-            login_session['loggedIn'] = True
+#         if crud.verify_UserPassword(data['email'], data['password']):
+#             login_session['OAuth'] = 'local'
+#             login_session['username'] = crud.get_User(data['email']).username
+#             login_session['email'] = data['email']
+#             login_session['loggedIn'] = True
 
-        return redirect('/')
+#         return redirect('/')
 
 
 # logout user

@@ -28,7 +28,7 @@ class Catalog extends Component {
 
     itemEvent(event) {
         console.log(event.currentTarget)
-        alert(event)
+        alert(event.currentTarget.innerText)
     }
 
     render() {
@@ -42,15 +42,18 @@ class Catalog extends Component {
             return (
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-2"></div>
-                        <div className="col-md-8">
-                            {
-                                items.map((d) => {
-                                    return <h1 onClick={this.itemEvent}>{d}</h1>
-                                })
-                            }
+                        <div className="col-sm-12 col-md-12 col-lg-12 text-center">
+                            <h1>Book Catalog</h1>
                         </div>
-                        <div className="col-md-2"></div>
+                        {
+                            items.map((item) => {
+                                return (
+                                    <div id="bgColor" className="col-sm-4 col-md-4 col-lg-4 text-center category">
+                                        <h4 onClick={this.itemEvent}>{item}</h4>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             );
