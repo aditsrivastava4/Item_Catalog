@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
 import Navbar from '../navbar/navbar'
 import LoginForm from './login_form'
+import Cookies from 'js-cookie'
+import { Redirect } from 'react-router-dom'
 
 class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedIn: Cookies.get('loggedIn')
+        };
+    }
     render() {
+        const { loggedIn } = this.state
+        if(loggedIn) {
+            return (
+                <Redirect to="/" />
+            )
+        }
         return (
             <div>
                 <Navbar />

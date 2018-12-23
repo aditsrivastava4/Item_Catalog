@@ -27,9 +27,11 @@ def googleLogin():
     data = json.loads(user_data)
 
     login_session['OAuth'] = 'google'
-    login_session['username'] = data['name']
-    login_session['picture'] = data['imageUrl']
-    login_session['email'] = data['email']
+    login_session['access_token'] = data['accessToken']
+    login_session['gplus_id'] = data['profileObj']['googleId']
+    login_session['username'] = data['profileObj']['name']
+    login_session['picture'] = data['profileObj']['imageUrl']
+    login_session['email'] = data['profileObj']['email']
     login_session['loggedIn'] = True
     crud.add_OAuthUser(login_session)
     return jsonify({'LoggedIn': True})
@@ -57,11 +59,14 @@ def googleLogout():
         del login_session['picture']
         del login_session['OAuth']
         login_session['loggedIn'] = False
-        return redirect('/')
+        return jsonify({
+            'logout': True
+        })
     else:
         response = make_response(
             json.dumps(
                 'Failed to revoke token for given user.',
-                400))
+                400
+            ))
         response.headers['Content-Type'] = 'application/json'
         return response

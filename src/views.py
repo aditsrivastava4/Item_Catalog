@@ -38,24 +38,24 @@ def index(path):
 
 
 # Sign Up local user
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'GET':
-        if login_session['loggedIn']:
-            return redirect('/')
-        return render_template(
-            'signup.html',
-            loggedIn=login_session['loggedIn'])
-    if request.method == 'POST':
-        data = request.form
-        login_session['OAuth'] = 'local'
-        login_session['username'] = data['username']
-        login_session['password'] = data['password']
-        login_session['email'] = data['email']
-        login_session['loggedIn'] = True
-        crud.add_SignUp(login_session)
-        del login_session['password']
-        return redirect('/')
+# @app.route('/signup', methods=['GET', 'POST'])
+# def signup():
+#     if request.method == 'GET':
+#         if login_session['loggedIn']:
+#             return redirect('/')
+#         return render_template(
+#             'signup.html',
+#             loggedIn=login_session['loggedIn'])
+#     if request.method == 'POST':
+#         data = request.form
+#         login_session['OAuth'] = 'local'
+#         login_session['username'] = data['username']
+#         login_session['password'] = data['password']
+#         login_session['email'] = data['email']
+#         login_session['loggedIn'] = True
+#         crud.add_SignUp(login_session)
+#         del login_session['password']
+#         return redirect('/')
 
 
 # Login page
@@ -98,20 +98,20 @@ def signup():
 
 
 # logout user
-# @app.route('/logout')
-# def logout():
-#     if login_session['loggedIn']:
-#         if login_session['OAuth'] == 'google':
-#             return redirect('/G_Logout')
-#         if login_session['OAuth'] == 'facebook':
-#             return redirect('/fb_Logout')
+@app.route('/logout')
+def logout():
+    if login_session['loggedIn']:
+        if login_session['OAuth'] == 'google':
+            return redirect('/G_Logout')
+        if login_session['OAuth'] == 'facebook':
+            return redirect('/fb_Logout')
 
-#         if login_session['OAuth'] == 'local':
-#             del login_session['username']
-#             del login_session['email']
-#             del login_session['OAuth']
-#             login_session['loggedIn'] = False
-#     return redirect('/')
+        if login_session['OAuth'] == 'local':
+            del login_session['username']
+            del login_session['email']
+            del login_session['OAuth']
+            login_session['loggedIn'] = False
+    return redirect('/')
 
 
 # Items List Page

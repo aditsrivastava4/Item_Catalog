@@ -9,15 +9,12 @@ class LoginForm extends Component {
             '/G_OAuth',
             {
                 method: 'post',
-                body: JSON.stringify(response.profileObj)
+                body: JSON.stringify(response)
             })
             .then((gOAuth) => {
                 return gOAuth.json();
             }).then((data) => {
                 if(data.LoggedIn) {
-                    // document.cookie = "username=" + response.profileObj.name
-                    // document.cookie = "loggedIn=True"
-                    // document.cookie = "type=G_OAuth"
                     Cookies.set('username', response.profileObj.name)
                     Cookies.set('loggedIn', true)
                     Cookies.set('type', 'G_OAuth')

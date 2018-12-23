@@ -9,17 +9,33 @@ class NavbarItem extends Component {
             username: Cookies.get('username')
         };
     }
-    checkLoggedIn()
+    logout()
     {
-        this.setState({
-            loggedIn: Cookies.get('loggedIn'),
-            username: Cookies.get('username')
+        fetch('/logout')
+        .then((logoutStatus) => {
+            return logoutStatus.json()
+        })
+        .then((status) => {
+            console.log(status)
+            if(status.logout) {
+                Cookies.remove('username')
+                Cookies.remove('type')
+                Cookies.remove('loggedIn')
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 500);
+            }
         })
     }
     render() {
         const { loggedIn, username } = this.state
-        const signup = !loggedIn ? <li><a href="/signup"><span className= "glyphicon glyphicon-user"></span> Sign Up</a></li> : ""
-        const logIcon = !loggedIn ? <li><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li> : <li><a href="/logout"><span className="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        let signup = !loggedIn ? <li><a href="/signup"><span className= "glyphicon glyphicon-user"></span> Sign Up</a></li> : ""
+        let logIcon
+        if( !loggedIn ) {
+            logIcon = <li><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
+        } else {
+            logIcon = <li><a className="pointer" onClick={ this.logout }><span className="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        }
 
         return (
             <div id="navbar" className="navbar-collapse collapse">
