@@ -22,7 +22,6 @@ class SignUp extends Component {
         })
     }
     signUp(event) {
-        alert(this.state.username)
         fetch('/signup', {
             method: 'post',
             body: JSON.stringify(this.state)

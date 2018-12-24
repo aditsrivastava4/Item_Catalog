@@ -3,6 +3,50 @@ import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie'
 
 class LoginForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedIn: Cookies.get('loggedIn'),
+            password: null,
+            email: null,
+            invalid: false
+        };
+        this.loginValue = this.loginValue.bind(this);
+        this.login = this.login.bind(this);
+    }
+
+    loginValue(event) {
+        // change state of each value
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
+    login(event) {
+        fetch('/login', {
+            method: 'post',
+            body: JSON.stringify(this.state)
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((response) => {
+            if(response.LoggedIn) {
+                Cookies.set('username', response.username)
+                Cookies.set('loggedIn', true)
+                Cookies.set('type', 'local')
+
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 500);
+            } else if(!response.user_exist) {
+                this.setState({
+                    invalid: true
+                })
+            }
+        })
+        event.preventDefault()
+    }
+
     successG_OAuth(response) {
         console.log(response);
         fetch(
@@ -27,19 +71,38 @@ class LoginForm extends Component {
     }
     failG_OAuth(response) {
         console.log(response);
+        alert("Google Login Failed!")
+        setTimeout(function() {
+            window.location.href = "/login";
+        }, 500);
     }
 
     render() {
+        const { email, password, invalid } = this.state
         return (
             <div className="col-sm-6 col-md-6 col-lg-6">
-                <form method="POST">
+                <form onSubmit={this.login}>
                     {/* <!-- For CSFR Protection --> */}
                     {/* <input type='hidden' name='state' value='{{ STATE }}' /> */}
                     <label>Email:</label>
-                    <input className="form-control" id="email" type="text" name="email" /><br />
+                    <input
+                        className="form-control"
+                        id="email"
+                        type="text"
+                        name="email"
+                        value={ email }
+                        onChange={ this.loginValue } /><br />
         
                     <label>Password:</label>
-                    <input className="form-control" id="pwd" type="password" name="password" /><br />
+                    <input
+                        className="form-control"
+                        id="pwd" 
+                        type="password"
+                        name="password"
+                        value={ password }
+                        onChange={ this.loginValue } /><br />
+
+                    { invalid? <p className="text-danger">*Invalid Email or Password</p> : ""}
 
                     <input className="btn btn-default" type="submit" name="Login" value="Login" />
                 </form>

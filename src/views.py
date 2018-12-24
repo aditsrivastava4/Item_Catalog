@@ -31,10 +31,6 @@ def index(path):
         login_session['loggedIn'] = False
         login_session['adit'] = 'Sri'
     return render_template('index.html')
-    # return render_template(
-    #     'catalog.html',
-    #     categories=categories,
-    #     loggedIn=login_session['loggedIn'])
 
 
 # Sign Up local user
@@ -47,48 +43,37 @@ def signup():
         login_session['password'] = data['password']
         login_session['email'] = data['email']
         login_session['loggedIn'] = True
-        # crud.add_SignUp(login_session)
+        crud.add_SignUp(login_session)
         del login_session['password']
         return jsonify({'LoggedIn': True})
 
 
 # Login page
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'GET':
-#         try:
-#             if login_session['loggedIn']:
-#                 return redirect('/')
-#         except BaseException:
-#             login_session['loggedIn'] = False
-#         state = ''.join(
-#             random.choice(
-#                 string.ascii_uppercase +
-#                 string.digits) for x in range(32))
-#         login_session['state'] = state
-#         return render_template(
-#             'login.html',
-#             STATE=state,
-#             loggedIn=login_session['loggedIn'])
+@app.route('/login', methods=['POST'])
+def login():
+    # POST request
+    if request.method == 'POST':
+        data = json.loads(request.data.decode())
+        # if login_session['state'] != data['state']:
+        #     flash('Invalid State Parameter')
+        #     return redirect(url_for('login'))
 
-#     # POST request
-#     if request.method == 'POST':
-#         data = request.form
-#         if login_session['state'] != data['state']:
-#             flash('Invalid State Parameter')
-#             return redirect(url_for('login'))
+        if not crud.get_User(data['email']):
+            return jsonify({
+                'LoggedIn': False,
+                'user_exist': False
+            })
 
-#         if not crud.get_User(data['email']):
-#             flash('User Does not Exist')
-#             return redirect(url_for('login'))
+        if crud.verify_UserPassword(data['email'], data['password']):
+            login_session['OAuth'] = 'local'
+            login_session['username'] = crud.get_User(data['email']).username
+            login_session['email'] = data['email']
+            login_session['loggedIn'] = True
 
-#         if crud.verify_UserPassword(data['email'], data['password']):
-#             login_session['OAuth'] = 'local'
-#             login_session['username'] = crud.get_User(data['email']).username
-#             login_session['email'] = data['email']
-#             login_session['loggedIn'] = True
-
-#         return redirect('/')
+        return jsonify({
+                'LoggedIn': True,
+                'username': login_session['username']
+            })
 
 
 # logout user
@@ -105,7 +90,9 @@ def logout():
             del login_session['email']
             del login_session['OAuth']
             login_session['loggedIn'] = False
-    return redirect('/')
+    return jsonify({
+            'logout': True
+        })
 
 
 # Items List Page

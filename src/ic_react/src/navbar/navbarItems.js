@@ -16,7 +16,6 @@ class NavbarItem extends Component {
             return logoutStatus.json()
         })
         .then((status) => {
-            console.log(status)
             if(status.logout) {
                 Cookies.remove('username')
                 Cookies.remove('type')
