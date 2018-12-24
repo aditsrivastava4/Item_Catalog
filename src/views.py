@@ -38,24 +38,18 @@ def index(path):
 
 
 # Sign Up local user
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'GET':
-#         if login_session['loggedIn']:
-#             return redirect('/')
-#         return render_template(
-#             'signup.html',
-#             loggedIn=login_session['loggedIn'])
-#     if request.method == 'POST':
-#         data = request.form
-#         login_session['OAuth'] = 'local'
-#         login_session['username'] = data['username']
-#         login_session['password'] = data['password']
-#         login_session['email'] = data['email']
-#         login_session['loggedIn'] = True
-#         crud.add_SignUp(login_session)
-#         del login_session['password']
-#         return redirect('/')
+@app.route('/signup', methods=['POST'])
+def signup():
+    if request.method == 'POST':
+        data = json.loads(request.data.decode())
+        login_session['OAuth'] = 'local'
+        login_session['username'] = data['username']
+        login_session['password'] = data['password']
+        login_session['email'] = data['email']
+        login_session['loggedIn'] = True
+        # crud.add_SignUp(login_session)
+        del login_session['password']
+        return jsonify({'LoggedIn': True})
 
 
 # Login page

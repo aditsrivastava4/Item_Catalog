@@ -7,13 +7,44 @@ class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loggedIn: Cookies.get('loggedIn')
+            loggedIn: Cookies.get('loggedIn'),
+            username: null,
+            password: null,
+            email: null
         };
+        this.signUpValue = this.signUpValue.bind(this);
+        this.signUp = this.signUp.bind(this);
     }
-    signUp() {
+    signUpValue(event) {
+        // change state of each value
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
+    signUp(event) {
+        alert(this.state.username)
+        fetch('/signup', {
+            method: 'post',
+            body: JSON.stringify(this.state)
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((response) => {
+            if(response.LoggedIn) {
+                Cookies.set('username', this.state.username)
+                Cookies.set('loggedIn', true)
+                Cookies.set('type', 'local')
+
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 500);
+            }
+        })
+        event.preventDefault()
     }
     render() {
-        const { loggedIn } = this.state
+        const { loggedIn, username, password, email } = this.state
         if(loggedIn) {
             return (
                 // Redirect to Home page if logged In
@@ -33,15 +64,32 @@ class SignUp extends Component {
 
                         <div className="col-sm-8 col-md-8 col-lg-8">
 
-                            <form method="POST">
+                            <form onSubmit={this.signUp}>
                                 <label>Name:</label>
-                                <input className="form-control" type="text" name="username" /><br />
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    name="username"
+                                    value={ username }
+                                    onChange={this.signUpValue} /><br />
 
                                 <label>Email:</label>
-                                <input className="form-control" id="email" type="text" name="email" /><br />
+                                <input
+                                    className="form-control"
+                                    id="email"
+                                    type="text"
+                                    name="email"
+                                    value={ email }
+                                    onChange={this.signUpValue} /><br />
 
                                 <label>Password:</label>
-                                <input className="form-control" id="pwd" type="password" name="password" /><br />
+                                <input
+                                    className="form-control"
+                                    id="pwd"
+                                    type="password"
+                                    name="password"
+                                    value={ password }
+                                    onChange={this.signUpValue} /><br />
 
                                 <input className="btn btn-default" type="submit" name="Sign Up" value="Sign Up" />
                             </form>
