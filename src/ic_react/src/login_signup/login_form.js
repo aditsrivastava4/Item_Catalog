@@ -9,7 +9,8 @@ class LoginForm extends Component {
             loggedIn: Cookies.get('loggedIn'),
             password: null,
             email: null,
-            invalid: false
+            invalid: false,
+            csrfToken: window.initialData
         };
         this.loginValue = this.loginValue.bind(this);
         this.login = this.login.bind(this);
@@ -34,6 +35,7 @@ class LoginForm extends Component {
                 Cookies.set('username', response.username)
                 Cookies.set('loggedIn', true)
                 Cookies.set('type', 'local')
+                Cookies.set('uid', response.csrfToken)
 
                 setTimeout(function() {
                     window.location.href = "/";
@@ -49,6 +51,8 @@ class LoginForm extends Component {
 
     successG_OAuth(response) {
         console.log(response);
+        response.csrfToken = this.state.csrfToken
+        console.log(response);
         fetch(
             '/G_OAuth',
             {
@@ -62,6 +66,7 @@ class LoginForm extends Component {
                     Cookies.set('username', response.profileObj.name)
                     Cookies.set('loggedIn', true)
                     Cookies.set('type', 'G_OAuth')
+                    Cookies.set('uid', data.csrfToken)
 
                     setTimeout(function() {
                         window.location.href = "/";

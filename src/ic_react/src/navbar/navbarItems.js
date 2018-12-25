@@ -20,6 +20,7 @@ class NavbarItem extends Component {
                 Cookies.remove('username')
                 Cookies.remove('type')
                 Cookies.remove('loggedIn')
+                Cookies.remove('uid')
                 setTimeout(function() {
                     window.location.href = "/";
                 }, 500);

@@ -4,6 +4,8 @@ import httplib2
 import requests
 import json
 import crud
+import string
+import random
 from flask import session as login_session
 
 from oauth2client.client import flow_from_clientsecrets
@@ -18,13 +20,19 @@ CLIENT_ID = json.loads(
 
 @google.route('/G_OAuth', methods=['POST'])
 def googleLogin():
-    # if request.args.get('state') != login_session['state']:
-    #     flash('Invalid State Parameter')
-    #     return redirect(url_for('login'))
-
     # Get user info
     user_data = request.data.decode()
     data = json.loads(user_data)
+
+    # if data['csrfToken'] != login_session['state']:
+    #     response = make_response(
+    #         json.dumps({
+    #             'response': 'Invaild State Token',
+    #             'code': 400
+    #         })
+    #     )
+    #     response.headers['Content-Type'] = 'application/json'
+    #     return response
 
     login_session['OAuth'] = 'google'
     login_session['access_token'] = data['accessToken']
@@ -33,8 +41,16 @@ def googleLogin():
     login_session['picture'] = data['profileObj']['imageUrl']
     login_session['email'] = data['profileObj']['email']
     login_session['loggedIn'] = True
+    state = ''.join(
+                random.choice(
+                    string.ascii_uppercase +
+                    string.digits) for x in range(64))
+    login_session['state'] = state
     crud.add_OAuthUser(login_session)
-    return jsonify({'LoggedIn': True})
+    return jsonify({
+            'LoggedIn': True,
+            'csrfToken': state
+        })
 
 
 # Google OAuth Logout
@@ -64,9 +80,10 @@ def googleLogout():
         })
     else:
         response = make_response(
-            json.dumps(
-                'Failed to revoke token for given user.',
-                400
-            ))
+            json.dumps({
+                'response': 'Failed to revoke token for given user.',
+                'code': 400
+            })
+        )
         response.headers['Content-Type'] = 'application/json'
         return response

@@ -29,7 +29,6 @@ def index(path):
     # categories = crud.getCategory()
     if not login_session:
         login_session['loggedIn'] = False
-        login_session['adit'] = 'Sri'
     return render_template('index.html')
 
 
@@ -44,8 +43,16 @@ def signup():
         login_session['email'] = data['email']
         login_session['loggedIn'] = True
         crud.add_SignUp(login_session)
+        state = ''.join(
+            random.choice(
+                string.ascii_uppercase +
+                string.digits) for x in range(64))
+        login_session['state'] = state
         del login_session['password']
-        return jsonify({'LoggedIn': True})
+        return jsonify({
+            'LoggedIn': True,
+            'csrfToken': state
+        })
 
 
 # Login page
@@ -54,9 +61,15 @@ def login():
     # POST request
     if request.method == 'POST':
         data = json.loads(request.data.decode())
-        # if login_session['state'] != data['state']:
-        #     flash('Invalid State Parameter')
-        #     return redirect(url_for('login'))
+        # if data['csrfToken'] != login_session['state']:
+        #     response = make_response(
+        #         json.dumps({
+        #             'response': 'Invaild State Token',
+        #             'code': 400
+        #         })
+        #     )
+        #     response.headers['Content-Type'] = 'application/json'
+        #     return response
 
         if not crud.get_User(data['email']):
             return jsonify({
@@ -69,10 +82,16 @@ def login():
             login_session['username'] = crud.get_User(data['email']).username
             login_session['email'] = data['email']
             login_session['loggedIn'] = True
+            state = ''.join(
+                random.choice(
+                    string.ascii_uppercase +
+                    string.digits) for x in range(64))
+            login_session['state'] = state
 
         return jsonify({
                 'LoggedIn': True,
-                'username': login_session['username']
+                'username': login_session['username'],
+                'csrfToken': state
             })
 
 
