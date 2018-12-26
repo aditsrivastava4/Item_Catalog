@@ -120,7 +120,7 @@ def addCategory(category):
     session.close_all()
 
 
-def getItem(category=None, item_id=None, item_name=None):
+def getItem(category = None, item_id = None, item_name = None, onlyName = False):
     """
     getItem(category = None, item_id = None, item_name = None)
             Get the Item detail on the base of anyone
@@ -133,7 +133,11 @@ def getItem(category=None, item_id=None, item_name=None):
         data = None
         if item_id is None and item_name is None:
             category = getCategory(category)
-            if category:
+            if category and onlyName:
+                data = session.query(Category_Items).filter_by(
+                    category=category).with_entities(Category_Items.item,Category_Items.author).all()
+                data = json.dumps({'items':data})
+            else:
                 data = session.query(Category_Items).filter_by(
                     category=category).all()
 
@@ -326,3 +330,18 @@ def get_APIkey(login_session):
         if user is not None:
             return user.api_key
         return None
+
+
+
+# 
+# 
+def item_API_OnlyName(category):
+    """
+    item_API()
+            returns all the items(only Title and Authors Name) related to a category JSON format
+    """
+    category = getCategory(category)
+    if category is None:
+        return None
+    result = getItem(category = category.name, onlyName = True)
+    return json.loads(result)

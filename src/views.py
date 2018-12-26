@@ -61,16 +61,6 @@ def login():
     # POST request
     if request.method == 'POST':
         data = json.loads(request.data.decode())
-        # if data['csrfToken'] != login_session['state']:
-        #     response = make_response(
-        #         json.dumps({
-        #             'response': 'Invaild State Token',
-        #             'code': 400
-        #         })
-        #     )
-        #     response.headers['Content-Type'] = 'application/json'
-        #     return response
-
         if not crud.get_User(data['email']):
             return jsonify({
                 'LoggedIn': False,
@@ -114,106 +104,109 @@ def logout():
         })
 
 
-# Items List Page
-@app.route('/catalog/<string:category>/items')
-def itemsList(category):
-    category = category.replace('+', ' ')
-    data = crud.getItem(category=category)
+# # Items List Page
+# @app.route('/catalog/<string:category>/items', methods=['POST'])
+# def itemsList(category):
+#     if request.method == 'POST':
+#         categoryItem = json.loads(request.data.decode())
+#         if categoryItem.csrfToken == login_session['state']:
+#             category = category.replace('+', ' ')
+#             data = crud.getItem(category=category)
 
-    return render_template(
-        'itemsList.html',
-        items=data,
-        category=category,
-        loggedIn=login_session['loggedIn']
-    )
-
-
-# Items Deatil Page
-@app.route('/catalog/<string:category>/<int:item_id>')
-def item(category, item_id):
-    data = crud.getItem(item_id=item_id)
-
-    return render_template(
-        'item.html',
-        item=data,
-        loggedIn=login_session['loggedIn']
-    )
+#             return render_template(
+#                 'itemsList.html',
+#                 items=data,
+#                 category=category,
+#                 loggedIn=login_session['loggedIn']
+#             )
 
 
-# Edit Items Detail Page
-@app.route(
-    '/catalog/<string:category>/<int:item_id>/edit',
-    methods=[
-        'GET',
-        'POST'])
-def edit_items(category, item_id):
-    if login_session['loggedIn']:
-        data = crud.getItem(item_id=item_id)
-        if request.method == 'GET':
-            categories = crud.getCategory()
+# # Items Deatil Page
+# @app.route('/catalog/<string:category>/<int:item_id>')
+# def item(category, item_id):
+#     data = crud.getItem(item_id=item_id)
 
-            return render_template(
-                'editItem.html',
-                item=data,
-                categories=categories,
-                selectedCategory=category,
-                loggedIn=login_session['loggedIn']
-            )
-
-        if request.method == 'POST':
-            form_data = request.form
-            crud.updateItem(form_data, item_id)
-            category = form_data['category'].replace(' ', '+')
-            return redirect('/catalog/{}/{}'.format(category, item_id))
-    else:
-        return redirect('/login')
+#     return render_template(
+#         'item.html',
+#         item=data,
+#         loggedIn=login_session['loggedIn']
+#     )
 
 
-# Delete Item Page
-@app.route(
-    '/catalog/<string:category>/<int:item_id>/delete',
-    methods=[
-        'GET',
-        'POST'])
-def delete_items(category, item_id):
+# # Edit Items Detail Page
+# @app.route(
+#     '/catalog/<string:category>/<int:item_id>/edit',
+#     methods=[
+#         'GET',
+#         'POST'])
+# def edit_items(category, item_id):
+#     if login_session['loggedIn']:
+#         data = crud.getItem(item_id=item_id)
+#         if request.method == 'GET':
+#             categories = crud.getCategory()
 
-    if login_session['loggedIn']:
-        data = crud.getItem(item_id=item_id)
-        if request.method == 'GET':
-            return render_template(
-                'deleteItem.html',
-                item=data.item,
-                loggedIn=login_session['loggedIn']
-            )
+#             return render_template(
+#                 'editItem.html',
+#                 item=data,
+#                 categories=categories,
+#                 selectedCategory=category,
+#                 loggedIn=login_session['loggedIn']
+#             )
 
-        if request.method == 'POST':
-            form_data = request.form
-            crud.deleteItem(item_id)
-            return redirect('/catalog/{}/items'.format(category))
-    else:
-        return redirect('/login')
+#         if request.method == 'POST':
+#             form_data = request.form
+#             crud.updateItem(form_data, item_id)
+#             category = form_data['category'].replace(' ', '+')
+#             return redirect('/catalog/{}/{}'.format(category, item_id))
+#     else:
+#         return redirect('/login')
 
 
-# Add new Item page
-@app.route('/catalog/<string:category>/new', methods=['GET', 'POST'])
-def new_item(category):
-    category = category.replace('+', ' ')
-    if login_session['loggedIn']:
-        if request.method == 'GET':
-            category = crud.getCategory(category=category)
+# # Delete Item Page
+# @app.route(
+#     '/catalog/<string:category>/<int:item_id>/delete',
+#     methods=[
+#         'GET',
+#         'POST'])
+# def delete_items(category, item_id):
 
-            return render_template(
-                'addItem.html',
-                category=category.name,
-                loggedIn=login_session['loggedIn']
-            )
+#     if login_session['loggedIn']:
+#         data = crud.getItem(item_id=item_id)
+#         if request.method == 'GET':
+#             return render_template(
+#                 'deleteItem.html',
+#                 item=data.item,
+#                 loggedIn=login_session['loggedIn']
+#             )
 
-        if request.method == 'POST':
-            form_data = request.form
-            item_id = crud.addItems(category, form_data)
-            return redirect('/catalog/{}/{}'.format(category, item_id))
-    else:
-        return redirect('/login')
+#         if request.method == 'POST':
+#             form_data = request.form
+#             crud.deleteItem(item_id)
+#             return redirect('/catalog/{}/items'.format(category))
+#     else:
+#         return redirect('/login')
+
+
+# # Add new Item page
+# @app.route('/catalog/<string:category>/new', methods=['GET', 'POST'])
+# def new_item(category):
+#     category = category.replace('+', ' ')
+#     if login_session['loggedIn']:
+#         if request.method == 'GET':
+#             category = crud.getCategory(category=category)
+
+#             return render_template(
+#                 'addItem.html',
+#                 category=category.name,
+#                 loggedIn=login_session['loggedIn']
+#             )
+
+#         if request.method == 'POST':
+#             form_data = request.form
+#             item_id = crud.addItems(category, form_data)
+#             return redirect('/catalog/{}/{}'.format(category, item_id))
+#     else:
+#         return redirect('/login')
 
 
 # API key and request page
@@ -296,20 +289,25 @@ def category_json():
 
 
 #  Request item.json API
-@app.route('/API/<string:category>/items.json')
+@app.route('/API/<string:category>/items.json', methods = ['GET', 'POST'])
 def item_json(category):
-    category = category.replace('+', ' ')
-    args = request.args
-    if args:
-        if crud.verify_APIkey(args['api_key']):
-            items = crud.item_API(category)
-            if items is None:
-                return jsonify({'response': 404,
-                                'result': '''Category doesn't Exist'''})
+    if request.method == 'GET':
+        category = category.replace('+', ' ')
+        args = request.args
+        if args:
+            if crud.verify_APIkey(args['api_key']):
+                items = crud.item_API(category)
+                if items is None:
+                    return jsonify({'response': 404,
+                                    'result': '''Category doesn't Exist'''})
 
-            results = {'response': 200, 'results': items}
-            return jsonify(results)
-    return jsonify({'response': 403, 'result': 'Wrong API key'})
+                results = {'response': 200, 'results': items}
+                return jsonify(results)
+        return jsonify({'response': 403, 'result': 'Wrong API key'})
+    
+    if request.method == 'POST':
+        items = crud.item_API_OnlyName(category)
+        return jsonify(items)
 
 
 # API Documentation page
