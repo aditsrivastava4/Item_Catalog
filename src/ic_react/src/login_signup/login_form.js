@@ -9,8 +9,7 @@ class LoginForm extends Component {
             loggedIn: Cookies.get('loggedIn'),
             password: null,
             email: null,
-            invalid: false,
-            csrfToken: window.initialData
+            invalid: false
         };
         this.loginValue = this.loginValue.bind(this);
         this.login = this.login.bind(this);

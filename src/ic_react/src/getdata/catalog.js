@@ -26,11 +26,6 @@ class Catalog extends Component {
             })
     }
 
-    itemEvent(event) {
-        console.log(event.currentTarget)
-        alert(event.currentTarget.innerText)
-    }
-
     render() {
         const { error, isLoaded, items } = this.state;
 
@@ -49,7 +44,7 @@ class Catalog extends Component {
                             items.map((item) => {
                                 return (
                                     <div id="bgColor" className="col-sm-4 col-md-4 col-lg-4 text-center category">
-                                        <h4 onClick={this.itemEvent}>{item}</h4>
+                                        <h4 onClick={this.props.ItemClick}>{item}</h4>
                                     </div>
                                 )
                             })

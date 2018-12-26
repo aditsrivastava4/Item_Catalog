@@ -34,7 +34,8 @@ class SignUp extends Component {
                 Cookies.set('username', this.state.username)
                 Cookies.set('loggedIn', true)
                 Cookies.set('type', 'local')
-
+                Cookies.set('uid', response.csrfToken)
+                
                 setTimeout(function() {
                     window.location.href = "/";
                 }, 500);
