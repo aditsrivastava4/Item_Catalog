@@ -128,6 +128,7 @@ class Category_Items(Base):
 	description = Column(String)
 	author = Column(String)
 	publisher = Column(String)
+	imageURL = Column(String)
 
 	category_id = Column(Integer, ForeignKey('category.id'))
 	category = relationship('Category')
@@ -140,6 +141,7 @@ class Category_Items(Base):
 			'author': self.author,
 			'publisher': self.publisher,
 			'description': self.description,
+			'imageURL': self.imageURL
 		}
 
 engine = create_engine('sqlite:///ItemCatalog.db')

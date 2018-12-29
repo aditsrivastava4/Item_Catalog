@@ -135,7 +135,12 @@ def getItem(category = None, item_id = None, item_name = None, onlyName = False)
             category = getCategory(category)
             if category and onlyName:
                 data = session.query(Category_Items).filter_by(
-                    category=category).with_entities(Category_Items.item,Category_Items.author).all()
+                    category=category
+                ).with_entities(
+                    Category_Items.item,
+                    Category_Items.author,
+                    Category_Items.item_id
+                ).all()
                 data = json.dumps({'items':data})
             else:
                 data = session.query(Category_Items).filter_by(
@@ -168,6 +173,7 @@ def addItems(category, itemData):
                 description=itemData['description'],
                 author=itemData['author'],
                 publisher=itemData['publisher'],
+                imageURL=itemData['imageURL'],
                 category=category
             )
             session.add(item)

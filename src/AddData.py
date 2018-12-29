@@ -16,7 +16,7 @@ js = json.loads(data.text)['results']
 for x in js:
     print('\n\n', x['list_name'])
     # Adding category to the database
-#     crud.addCategory(x['list_name'])
+    crud.addCategory(x['list_name'])
     params['list'] = x['list_name']
 
     book = requests.get(bookList_url, params=params)
@@ -24,11 +24,13 @@ for x in js:
     for y in bJS:
         bookData = {}
         bookData['name'] = y['book_details'][0]['title']
-        print(y)
+        print(bookData['name'])
         bookData['description'] = y['book_details'][0]['description']
         bookData['author'] = y['book_details'][0]['author']
         bookData['publisher'] = y['book_details'][0]['publisher']
-        break
-    break
+        bookData['imageURL'] = 'http://covers.openlibrary.org/b/isbn/{}-L.jpg'.format(y['book_details'][0]['primary_isbn13'])
+        print()
+    #     break
+    # break
         # Adding the item to the database
-        # crud.addItems(params['list'], bookData)
+        crud.addItems(params['list'], bookData)
