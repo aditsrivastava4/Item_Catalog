@@ -12,7 +12,9 @@ class Category extends Component {
             error: null
         }
         this.getItems()
+        
     }
+    
     getItems() {
         let data = [];
         let url = "/API/"+ this.state.category +"/items.json"
@@ -24,7 +26,8 @@ class Category extends Component {
                 result.items.forEach(item => {
                     data.push({
                         Book: item[0],
-                        Author: item[1]
+                        Author: item[1],
+                        itemId: item[2]
                     })
                 });
                 this.setState({
@@ -47,7 +50,7 @@ class Category extends Component {
                             <h1>Category: { category }</h1>
                             { loggedIn ? 
                                 <p>
-                                    <a href="new">Add Book</a>
+                                    <a href="new"><span className="glyphicon glyphicon-plus"></span> Add Book</a>
                                 </p> :
                                 ""
                             }
@@ -58,9 +61,10 @@ class Category extends Component {
                             return (
                                 <div className="row">
                                     <div className="col-sm-2 col-md-2 col-lg-2"></div>
-                                    <div id="bgColor" className="col-sm-8 col-md-8 col-lg-8 text-center category">
+                                    <div onClick={ this.props.itemClick } id="bgColor" className="col-sm-8 col-md-8 col-lg-8 pointer text-center category">
+                                        <p className="hidden">{ item.itemId }</p>
                                         <h2>{ item.Book }</h2>
-                                        <h5>Author: { item.Author }</h5>
+                                        <h5><strong>Author:</strong> { item.Author }</h5>
                                     </div>
                                     <div className="col-sm-2 col-md-2 col-lg-2"></div>
                                 </div>

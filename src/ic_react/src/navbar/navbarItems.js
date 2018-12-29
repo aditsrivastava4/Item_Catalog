@@ -34,7 +34,7 @@ class NavbarItem extends Component {
         if( !loggedIn ) {
             logIcon = <li><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
         } else {
-            logIcon = <li><a className="pointer" onClick={ this.logout }><span className="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            logIcon = <li><a className="pointer" onClick={ this.logout }><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
         }
 
         return (

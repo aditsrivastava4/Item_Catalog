@@ -122,15 +122,13 @@ def logout():
 
 
 # # Items Deatil Page
-# @app.route('/catalog/<string:category>/<int:item_id>')
-# def item(category, item_id):
-#     data = crud.getItem(item_id=item_id)
-
-#     return render_template(
-#         'item.html',
-#         item=data,
-#         loggedIn=login_session['loggedIn']
-#     )
+@app.route('/catalog/<string:category>/<int:item_id>', methods=['POST'])
+def item(category, item_id):
+    if request.method == 'POST':
+        data = crud.getItem(item_id=item_id).serialize
+        return jsonify({
+            'item': data
+        })
 
 
 # # Edit Items Detail Page

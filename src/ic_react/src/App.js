@@ -3,7 +3,7 @@ import Catalog from './getdata/catalog'
 import Navbar from './navbar/navbar'
 // import logo from './logo.svg';
 import './App.css';
-import Category from './categoryList/category';
+import CategoryIndex from './categoryList/category_index';
 
 class App extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class App extends Component {
         this.itemEvent = this.itemEvent.bind(this)
     }
     itemEvent(event) {
-        alert(event.currentTarget.innerText)
         this.setState({
             item:event.currentTarget.innerText
         })
@@ -27,7 +26,7 @@ class App extends Component {
                 <Navbar />
                 { this.state.item == null?
                     <Catalog ItemClick={ this.itemEvent }/> :
-                    <Category CategoryName={ this.state.item }/>
+                    <CategoryIndex CategoryName={ this.state.item }/>
                 }
             </div>
         );
