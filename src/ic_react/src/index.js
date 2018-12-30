@@ -6,7 +6,6 @@ import Login from './login_signup/login_index'
 import * as serviceWorker from './serviceWorker';
 import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
 import SignUp from './login_signup/signup';
-import Category from './categoryList/category'
 
 const routing = (
     <Router>
@@ -14,8 +13,6 @@ const routing = (
             <Route exact path="/" component={ App } />
             <Route exact path="/login" component={ Login } />
             <Route exact path="/signup" component={ SignUp } />
-            {/* <Route exact path="/edit" component={ SignUp } /> */}
-            {/* <Route exact path="/new" component={ SignUp } /> */}
         </Switch>
     </Router>
 )

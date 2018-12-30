@@ -25,6 +25,7 @@ class CategoryIndex extends Component {
         event.preventDefault()
     }
 
+    // Delete an Item
     deleteOnClick(event) {
         let url = "/catalog/"+ this.state.itemData.itemID +"/delete"
         fetch(url, {

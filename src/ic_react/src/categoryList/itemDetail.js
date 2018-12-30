@@ -13,8 +13,6 @@ class ItemDetail extends Component {
         this.getItemDetail()
     }
 
-
-
     getItemDetail() {
         let url = "/catalog/" + this.props.itemData.book + "/"+ this.props.itemData.itemID
         fetch(url, {
@@ -24,7 +22,6 @@ class ItemDetail extends Component {
             return response.json()
         })
         .then((result) => {
-            // console.log(result)
             this.setState({
                 isLoaded: true,
                 itemData: result.item
