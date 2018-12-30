@@ -14,6 +14,8 @@ const routing = (
             <Route exact path="/" component={ App } />
             <Route exact path="/login" component={ Login } />
             <Route exact path="/signup" component={ SignUp } />
+            {/* <Route exact path="/edit" component={ SignUp } /> */}
+            {/* <Route exact path="/new" component={ SignUp } /> */}
         </Switch>
     </Router>
 )

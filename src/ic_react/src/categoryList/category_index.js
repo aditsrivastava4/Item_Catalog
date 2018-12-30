@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Category from './category';
 import ItemDetail from './itemDetail';
+import Cookies from 'js-cookie';
 
 class CategoryIndex extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class CategoryIndex extends Component {
             itemData: null
         }
         this.itemDetail = this.itemDetail.bind(this)
+        this.deleteOnClick = this.deleteOnClick.bind(this)
     }
     
     itemDetail(event) {
@@ -23,11 +25,36 @@ class CategoryIndex extends Component {
         event.preventDefault()
     }
 
+    deleteOnClick(event) {
+        let url = "/catalog/"+ this.state.itemData.itemID +"/delete"
+        fetch(url, {
+            method: 'POST',
+            body: Cookies.get("uid")
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((result) => {
+            if(result.code == 200) {
+                this.setState({
+                    onChange: false,
+                    itemData: null
+                })
+            } else if(result.code == 404) {
+                window.location.href = '/login'
+            } else if(result.code == 400) {
+                alert('Bad Request')
+                window.location.href = '/'
+            }
+        })
+        event.preventDefault()
+    }
+
     render() {
         return (
             <div>
                 { this.state.onChange ?
-                    <ItemDetail itemData = { this.state.itemData }/> :
+                    <ItemDetail itemData = { this.state.itemData } onDelete = { this.deleteOnClick }/> :
                     <Category itemClick={ this.itemDetail } CategoryName={ this.props.CategoryName }/>
                 }
             </div>

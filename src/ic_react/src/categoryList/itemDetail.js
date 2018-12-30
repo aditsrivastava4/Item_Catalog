@@ -13,10 +13,12 @@ class ItemDetail extends Component {
         this.getItemDetail()
     }
 
+
+
     getItemDetail() {
         let url = "/catalog/" + this.props.itemData.book + "/"+ this.props.itemData.itemID
         fetch(url, {
-            method: 'POST'
+            method: 'POST',
         })
         .then((response) => {
             return response.json()
@@ -47,30 +49,23 @@ class ItemDetail extends Component {
                     <div className="row">
                         <div class="col-sm-2 col-md-2 col-lg-2"></div>
                         <div id="bgColor" className="col-sm-8 col-md-8 col-lg-8">
-                            {/* <div className="row"> */}
-                                {/* <div className="col-sm-4 col-md-4 col-lg-4">
-                                    <img
-                                        src={ itemData.imageURL }
-                                        height="300px"
-                                        width="250px"
-                                        alt={ itemData.item }>
-                                    </img>
-                                </div> */}
-                                {/* <div className="col-sm-8 col-md-8 col-lg-8"> */}
-                                    <h2>{ itemData.item }</h2>
-                                    <h5>Author: { itemData.author }</h5>
-                                    <h5>Publisher : { itemData.publisher }</h5>
-                                    <h4>Description</h4>
-                                    <p>{ itemData.description }</p>
-                                    { loggedIn ?
-                                        <p>
-                                            <a><span className="glyphicon glyphicon-edit"></span> Edit</a> | 
-                                            <a><span className="glyphicon glyphicon-trash"></span> Delete</a>
-                                        </p> :
-                                        ""
-                                    }
-                                {/* </div> */}
-                            {/* </div> */}
+                            
+                            <h2>{ itemData.item }</h2>
+                            <h5>Author: { itemData.author }</h5>
+                            <h5>Publisher : { itemData.publisher }</h5>
+                            <h4>Description</h4>
+                            <p>{ itemData.description }</p>
+                            { loggedIn ?
+                                <p>
+                                    <a className="btn btn-default"><span className="glyphicon glyphicon-edit"></span> Edit</a>&nbsp;
+                                    <p onClick={ this.props.onDelete } className="btn btn-default">
+                                        <span className="glyphicon glyphicon-trash"></span>
+                                        Delete
+                                    </p>
+                                </p> :
+                                ""
+                            }
+
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2"></div>
                     </div>

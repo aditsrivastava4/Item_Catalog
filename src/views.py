@@ -161,28 +161,43 @@ def item(category, item_id):
 
 
 # # Delete Item Page
-# @app.route(
-#     '/catalog/<string:category>/<int:item_id>/delete',
-#     methods=[
-#         'GET',
-#         'POST'])
-# def delete_items(category, item_id):
+@app.route('/catalog/<int:item_id>/delete', methods=['POST'])
+def delete_items(item_id):
+    print('hola')
+    if request.method == 'POST':
+        if login_session['loggedIn']:
+            form_data = request.data.decode()
 
-#     if login_session['loggedIn']:
-#         data = crud.getItem(item_id=item_id)
-#         if request.method == 'GET':
-#             return render_template(
-#                 'deleteItem.html',
-#                 item=data.item,
-#                 loggedIn=login_session['loggedIn']
-#             )
-
-#         if request.method == 'POST':
-#             form_data = request.form
-#             crud.deleteItem(item_id)
-#             return redirect('/catalog/{}/items'.format(category))
-#     else:
-#         return redirect('/login')
+            if form_data == login_session['state']:
+                if crud.deleteItem(item_id) != '''Item Don't Exist''':
+                    response = make_response(
+                        json.dumps({
+                            'response': 'Item Deleted',
+                            'code': 200
+                        })
+                    )
+                    response.headers['Content-Type'] = 'application/json'
+                    return response
+                else:
+                    response = make_response(
+                        json.dumps({
+                            'response': 'Item not Deleted or Item Does not exists',
+                            'code': 404
+                        })
+                    )
+                    response.headers['Content-Type'] = 'application/json'
+                    return response
+            else:
+                response = make_response(
+                    json.dumps({
+                        'response': 'Invalid State Token',
+                        'code': 400
+                    })
+                )
+                response.headers['Content-Type'] = 'application/json'
+                return response
+        else:
+            return redirect('/login')
 
 
 # # Add new Item page
