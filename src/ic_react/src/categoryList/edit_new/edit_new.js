@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Cookies from 'js-cookie';
-import EditItem from './editItem';
-import NewItem from './newItem';
+import EditNewForm from './EditNewForm';
 
 class EditNew_index extends Component {
     constructor(props) {
@@ -13,12 +12,7 @@ class EditNew_index extends Component {
     }
     render() {
         return (
-            <div>
-                { this.state.option == 'edit' ?
-                    <EditItem /> :
-                    <NewItem />
-                }
-            </div>
+            <EditNewForm option = { "edit" }/>
         )
     }
 }

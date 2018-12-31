@@ -55,7 +55,10 @@ class CategoryIndex extends Component {
         return (
             <div>
                 { this.state.onChange ?
-                    <ItemDetail itemData = { this.state.itemData } onDelete = { this.deleteOnClick }/> :
+                    <ItemDetail
+                        itemData = { this.state.itemData }
+                        onDelete = { this.deleteOnClick }
+                        CategoryName={ this.props.CategoryName } /> :
                     <Category itemClick={ this.itemDetail } CategoryName={ this.props.CategoryName }/>
                 }
             </div>

@@ -132,38 +132,29 @@ def item(category, item_id):
 
 
 # # Edit Items Detail Page
-# @app.route(
-#     '/catalog/<string:category>/<int:item_id>/edit',
-#     methods=[
-#         'GET',
-#         'POST'])
-# def edit_items(category, item_id):
-#     if login_session['loggedIn']:
-#         data = crud.getItem(item_id=item_id)
-#         if request.method == 'GET':
-#             categories = crud.getCategory()
+@app.route('/catalog/<int:item_id>/edit', methods=['POST'])
+def edit_items(item_id):
+    if request.method == 'POST':
+        if login_session['loggedIn']:
+                form_data = json.loads(request.data.decode())
+                print(form_data)
 
-#             return render_template(
-#                 'editItem.html',
-#                 item=data,
-#                 categories=categories,
-#                 selectedCategory=category,
-#                 loggedIn=login_session['loggedIn']
-#             )
-
-#         if request.method == 'POST':
-#             form_data = request.form
-#             crud.updateItem(form_data, item_id)
-#             category = form_data['category'].replace(' ', '+')
-#             return redirect('/catalog/{}/{}'.format(category, item_id))
-#     else:
-#         return redirect('/login')
+                crud.updateItem(form_data, item_id)
+                response = make_response(
+                        json.dumps({
+                            'response': 'Item Updated',
+                            'code': 200
+                        })
+                    )
+                response.headers['Content-Type'] = 'application/json'
+                return response
+        else:
+            return redirect('/login')
 
 
 # # Delete Item Page
 @app.route('/catalog/<int:item_id>/delete', methods=['POST'])
 def delete_items(item_id):
-    print('hola')
     if request.method == 'POST':
         if login_session['loggedIn']:
             form_data = request.data.decode()

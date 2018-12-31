@@ -196,6 +196,7 @@ def updateItem(form_data, item_id):
     if item is not None:
         session = DBSession()
 
+        # if None then no change
         if form_data['title']:
             item.item = form_data['title']
 
@@ -208,8 +209,7 @@ def updateItem(form_data, item_id):
         if form_data['description']:
             item.description = form_data['description']
 
-        if form_data['category'] != getCategory(
-                category_id=item.category_id).name:
+        if form_data['category']:
             item.category_id = getCategory(form_data['category']).id
 
         session.add(item)

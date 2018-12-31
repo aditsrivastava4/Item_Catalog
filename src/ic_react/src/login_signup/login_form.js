@@ -86,8 +86,6 @@ class LoginForm extends Component {
         return (
             <div className="col-sm-6 col-md-6 col-lg-6">
                 <form onSubmit={this.login}>
-                    {/* <!-- For CSFR Protection --> */}
-                    {/* <input type='hidden' name='state' value='{{ STATE }}' /> */}
                     <label>Email:</label>
                     <input
                         className="form-control"
