@@ -6,3 +6,9 @@ test.html
 MDtoHTML.py
 *.db
 AddData.py
+css
+js
+index.html
+
+!js/api_doc.js
+!js/api.js
