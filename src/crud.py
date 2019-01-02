@@ -166,20 +166,19 @@ def addItems(category, itemData):
     """
     category = getCategory(category=category)
     if category:
-        if not getItem(item_name=itemData['name']):
+        if not getItem(item_name=itemData['title']):
             session = DBSession()
             item = Category_Items(
-                item=itemData['name'],
+                item=itemData['title'],
                 description=itemData['description'],
                 author=itemData['author'],
                 publisher=itemData['publisher'],
-                imageURL=itemData['imageURL'],
                 category=category
             )
             session.add(item)
             session.commit()
             session.close_all()
-            return getItem(item_name=itemData['name']).item_id
+            return getItem(item_name=itemData['title']).item_id
         else:
             return 'Item already exist'
     else:
