@@ -7,7 +7,7 @@ class EditNewForm extends Component {
         super(props)
         this.state = {
             loggedIn: Cookies.get('loggedIn'),
-            isLoaded: false,
+            isLoaded: this.props.option == "New"? true: false,
             error: null,
             option: this.props.option,
             itemData: this.props.itemData,
@@ -16,9 +16,11 @@ class EditNewForm extends Component {
             author: null,
             publisher: null,
             description: null,
-            category: null
+            category: this.props.option == "New"? this.props.CategoryName: null
         }
-        this.getData()
+        if(this.state.option == "Edit") {
+            this.getData()
+        }
         this.valueChange = this.valueChange.bind(this)
         this.submit = this.submit.bind(this)
     }
@@ -40,14 +42,21 @@ class EditNewForm extends Component {
 
     submit(event) {
         const { title, author, publisher, description, category, itemData } = this.state
-        let form_data = {}
-        form_data.title = title
-        form_data.author = author
-        form_data.publisher = publisher
-        form_data.description = description
-        form_data.category = category
+        let form_data = {
+            title: title,
+            author: author,
+            publisher: publisher,
+            description: description,
+            category: category,
+            uid: Cookies.get('uid')
+        }
+        let url;
+        if(this.state.option == "Edit") {
+            url = "/catalog/"+ itemData.item_id +"/edit"
+        } else {
+            url = "/catalog/"+ category +"/new"
+        }
 
-        let url = "/catalog/"+ itemData.item_id +"/edit"
         fetch(url, {
             method: 'POST',
             body: JSON.stringify(form_data)
@@ -56,8 +65,10 @@ class EditNewForm extends Component {
             return response.json()
         })
         .then((result) => {
-            console.log(result)
-            if(result.code == 200) {
+            if(result.code == 200 && result.item_ID == undefined) {
+                this.props.afterUpdate()
+            }
+            if(result.code == 200 && result.item_ID != undefined) {
                 this.props.afterUpdate()
             }
         })
@@ -153,20 +164,28 @@ class EditNewForm extends Component {
                                 <div className="form-group">
                                     <label className="control-label col-sm-2">Category:</label>
                                     <div className="col-sm-10">
-                                        <select className="form-control" name="category" onChange={ this.valueChange }>
-                                        {
-                                            categories.map((category) => {
-                                                if(category == this.props.CategoryName) {
+                                        { categories != null ?
+                                            <select className="form-control" name="category" onChange={ this.valueChange }>
+                                            {
+                                                categories.map((category) => {
+                                                    if(category == this.props.CategoryName) {
+                                                        return (
+                                                            <option selected>{ category }</option>
+                                                        )
+                                                    }
                                                     return (
-                                                        <option selected>{ category }</option>
+                                                        <option>{ category }</option>
                                                     )
-                                                }
-                                                return (
-                                                    <option>{ category }</option>
-                                                )
-                                            })
+                                                }) 
+                                            }
+                                            </select> :
+                                            <input 
+                                                className="form-control" 
+                                                type="text" 
+                                                name="category" 
+                                                value={ this.props.CategoryName }
+                                                disabled/>
                                         }
-                                        </select>
                                     </div>
                                 </div>
 

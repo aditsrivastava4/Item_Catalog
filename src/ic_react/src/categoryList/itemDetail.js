@@ -14,11 +14,10 @@ class ItemDetail extends Component {
         }
         this.getItemDetail()
         this.editItem = this.editItem.bind(this)
-        this.changeEditState = this.changeEditState.bind(this)
     }
 
     getItemDetail() {
-        let url = "/catalog/" + this.props.itemData.book + "/"+ this.props.itemData.itemID
+        let url = "/catalog/" + this.props.itemData.itemID
         fetch(url, {
             method: 'POST',
         })
@@ -33,17 +32,13 @@ class ItemDetail extends Component {
         })
     }
 
-    changeEditState() {
-        console.log(this.state)
+    editItem() {
         this.setState({
             toEdit: !this.state.toEdit
         })
-        console.log(this.state)
-    }
-
-    editItem(event) {
-        this.changeEditState()
-        event.preventDefault()
+        if(!this.state.toEdit) {
+            this.getItemDetail()
+        }
     }
 
     render() {
@@ -88,7 +83,11 @@ class ItemDetail extends Component {
                                 <div class="col-sm-2 col-md-2 col-lg-2"></div>
                             </div>
                         </div> :
-                        <EditNewForm afterUpdate = { this.changeEditState } option = { "Edit" } itemData = { itemData } CategoryName={ this.props.CategoryName } />
+                        <EditNewForm
+                            afterUpdate = { this.editItem }
+                            option = { "Edit" }
+                            itemData = { itemData }
+                            CategoryName={ this.props.CategoryName } />
                     }
                 </div>
             )
