@@ -93,40 +93,7 @@ This project is to create a website that shows the list of categories(Book Categ
 
 ### 2. crud.py
 
-* **getCategory(category = None, category_id = None)**: Will return all the categories if no parameters are provided.
-
-* **add_OAuthUser(user_data)**: Users who log in for first time using OAuth are added to the database.
-
-* **get_OAuthUser(email)**: Get detail of OAuth users.
-
-* **get_User(email)**: Get detail of local users.
-
-* **verify_UserPassword(email, password)**: Verify local users password at the time of login.
-
-* **add_SignUp(user_data)**: Users who sign up as local user are added to the database.
-
-* **addCategory(category)**: Add the category to the database.
-
-* **getItem(category = None, item_id = None, item_name = None)**: Get the Item detail on the base of anyone of the above parameters or
-it will return 'Data Not Provided'.
-
-* **addItems(category, itemData)**: Add the new Item to the database and link it to category it is related to.
-
-* **updateItem(form_data, item_id)**: Update the details of existing item.
-
-* **deleteItem(item_id)**: Delete the Item and its details from the database.
-
-* **catalog_API()**: returns all the data in JSON format.
-
-* **category_API()**: returns all the categories data in JSON format.
-
-* **item_API(category)**: returns all the items related to a category JSON format.
-
-* **addAPI_key(api_key, login_session)**: Added the User's or OAuth_User's api_key to their details.
-
-* **verify_APIkey(api_key)**: Verify the api_key of the User or OAuth_User.
-
-* **get_APIkey(login_session)**: Get the api_key of the User or OAuth_User.
+This module handles all database operations that Create Read Update and Delete(**CRUD**).
 
 
 ### 3. AddData.py
@@ -137,28 +104,6 @@ AddData.py is being used to get book data from [The New York Times Developer's](
 ### 4. views.py
 
 It is the main module which is used to run the Flask server. All the routes of the website are defined in it.
-
-#### Routes
-* ```/``` : Home/Index page(Request type GET).
-* ```/signup``` : Sign up page(Request type GET, POST).
-* ```/login``` : Login page(Request type GET, POST).
-* ```/logout``` : To Logout user(Request type GET.
-* ```/G_OAuth``` : Login user with Google OAuth(Request type POST).
-* ```/G_Logout``` : Logout Google OAuth user(Request type GET).
-* ```/fb_OAuth``` : Login user with Facebook OAuth(Request type POST).
-* ```/fb_Logout``` : Logout Facebook OAuth user(Request type GET).
-* ```/catalog/<string:category>/items``` : Items List page(Request type GET).
-* ```/catalog/<string:category>/<int:item_id>``` : Items Detail page(Request type GET).
-* ```/catalog/<string:category>/<int:item_id>/edit``` : Edit Items Detail page(Request type GET, POST).
-* ```/catalog/<string:category>/<int:item_id>/delete``` : Delete Item(Request type GET, POST).
-* ```/catalog/<string:category>/new``` : Add New Item page(Request type GET, POST).
-* ```/API``` : API key and request page(Request type GET, POST).
-* ```/API/register``` : Register users API key(Request type POST).
-* ```/API/catalog.json``` : Request catalog.json API(Request type GET).
-* ```/API/catalog/category.json``` : Request category.json API(Request type GET, POST).
-* ```/API/<string:category>/items.json``` : Request item.json API(Request type GET).
-* ```/API-doc``` : API Documentation page(Request type GET).
-
 
 ## Dependencies
 
