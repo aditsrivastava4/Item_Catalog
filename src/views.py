@@ -122,8 +122,8 @@ def logout():
 
 
 # # Items Deatil Page
-@app.route('/catalog/<string:category>/<int:item_id>', methods=['POST'])
-def item(category, item_id):
+@app.route('/catalog/<int:item_id>', methods=['POST'])
+def item(item_id):
     if request.method == 'POST':
         data = crud.getItem(item_id=item_id).serialize
         return jsonify({
@@ -137,17 +137,35 @@ def edit_items(item_id):
     if request.method == 'POST':
         if login_session['loggedIn']:
                 form_data = json.loads(request.data.decode())
-                print(form_data)
 
-                crud.updateItem(form_data, item_id)
-                response = make_response(
+                if form_data['uid'] == login_session['state']:
+                    if crud.updateItem(form_data, item_id) != '''Item Don't Exist''':
+                        response = make_response(
+                                json.dumps({
+                                    'response': 'Item Updated',
+                                    'code': 200
+                                })
+                            )
+                        response.headers['Content-Type'] = 'application/json'
+                        return response
+                    else:
+                        response = make_response(
+                            json.dumps({
+                                'response': 'Item not Updated or Item Does not exists',
+                                'code': 404
+                            })
+                        )
+                        response.headers['Content-Type'] = 'application/json'
+                        return response
+                else:
+                    response = make_response(
                         json.dumps({
-                            'response': 'Item Updated',
-                            'code': 200
+                            'response': 'Invalid State Token',
+                            'code': 400
                         })
                     )
-                response.headers['Content-Type'] = 'application/json'
-                return response
+                    response.headers['Content-Type'] = 'application/json'
+                    return response
         else:
             return redirect('/login')
 
@@ -192,25 +210,56 @@ def delete_items(item_id):
 
 
 # # Add new Item page
-# @app.route('/catalog/<string:category>/new', methods=['GET', 'POST'])
-# def new_item(category):
-#     category = category.replace('+', ' ')
-#     if login_session['loggedIn']:
-#         if request.method == 'GET':
-#             category = crud.getCategory(category=category)
-
-#             return render_template(
-#                 'addItem.html',
-#                 category=category.name,
-#                 loggedIn=login_session['loggedIn']
-#             )
-
-#         if request.method == 'POST':
-#             form_data = request.form
-#             item_id = crud.addItems(category, form_data)
-#             return redirect('/catalog/{}/{}'.format(category, item_id))
-#     else:
-#         return redirect('/login')
+@app.route('/catalog/<string:category>/new', methods=['POST'])
+def new_item(category):
+    if request.method == 'POST':
+        if login_session['loggedIn']:
+                form_data = json.loads(request.data.decode())
+                
+                if form_data['uid'] == login_session['state']:
+                    addItem = crud.addItems(category, form_data)
+                    if addItem != 'Item already exist' or addItem != 'Category Does not exist':
+                        response = make_response(
+                                json.dumps({
+                                    'response': 'Item Added',
+                                    'code': 200,
+                                    'item_ID': addItem
+                                })
+                            )
+                        response.headers['Content-Type'] = 'application/json'
+                        return response
+                    elif addItem == 'Item already exist':
+                        # if item already exist
+                        response = make_response(
+                            json.dumps({
+                                'response': 'Item already exist',
+                                'code': 409
+                            })
+                        )
+                        response.headers['Content-Type'] = 'application/json'
+                        return response
+                    else:
+                        # If category Does not exists
+                        response = make_response(
+                            json.dumps({
+                                'response': 'Category Does not exist',
+                                'code': 404
+                            })
+                        )
+                        response.headers['Content-Type'] = 'application/json'
+                        return response
+                else:
+                    # If state token does not match
+                    response = make_response(
+                        json.dumps({
+                            'response': 'Invalid State Token',
+                            'code': 400
+                        })
+                    )
+                    response.headers['Content-Type'] = 'application/json'
+                    return response
+        else:
+            return redirect('/login')
 
 
 # API key and request page
