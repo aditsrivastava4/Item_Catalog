@@ -22,10 +22,10 @@ app.register_blueprint(google)
 
 
 # Home/Index Page
-# @app.route('/')
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def index(path):
+@app.route('/')
+@app.route('/login')
+@app.route('/signup')
+def index():
     # categories = crud.getCategory()
     if not login_session:
         login_session['loggedIn'] = False
@@ -102,23 +102,6 @@ def logout():
     return jsonify({
             'logout': True
         })
-
-
-# # Items List Page
-# @app.route('/catalog/<string:category>/items', methods=['POST'])
-# def itemsList(category):
-#     if request.method == 'POST':
-#         categoryItem = json.loads(request.data.decode())
-#         if categoryItem.csrfToken == login_session['state']:
-#             category = category.replace('+', ' ')
-#             data = crud.getItem(category=category)
-
-#             return render_template(
-#                 'itemsList.html',
-#                 items=data,
-#                 category=category,
-#                 loggedIn=login_session['loggedIn']
-#             )
 
 
 # # Items Deatil Page
