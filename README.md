@@ -130,12 +130,6 @@ It is the main module which is used to run the Flask server. All the routes of t
 * **api.html** : API endpoint template.
 
 
-## Static
-### Javascript
-* **api_doc.js** : Javascript for API Documentation.
-* **api.js** : Javascript for API Endpoint request page.
-
-
 ## To Run
 To run the server open the terminal
 First Clone the repo
