@@ -116,20 +116,6 @@ It is the main module which is used to run the Flask server. All the routes of t
 * **psycopg2** version 2.7.6.1
 
 
-## Templates
-* **index.html** : Base Template for all web pages.
-* **catalog.html** : Home template.
-* **itemsList.html** : List of Items template.
-* **item.html** : Item Detail template.
-* **editItem.html** : Edit item template.
-* **deleteItem.html** : Delete item template
-* **addItem.html** : Add item template.
-* **signup.html** : Sign Up page template.
-* **login.html** : Login page template.
-* **apiDoc.html** : API Endpoint Documentation template.
-* **api.html** : API endpoint template.
-
-
 ## To Run
 To run the server open the terminal
 First Clone the repo
