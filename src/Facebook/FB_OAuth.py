@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, render_template
 from flask import request, redirect, jsonify, url_for, flash
-import httplib2
 import requests
 import json
 import crud
@@ -68,18 +67,30 @@ def facebookLogin():
 # Facebook OAuth Logout
 @facebook.route('/fb_Logout')
 def fbdisconnect():
-    facebook_id = login_session['facebook_id']
-    # The access token must me included to successfully logout
-    access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
-        facebook_id, access_token)
-    h = httplib2.Http()
-    result = h.request(url, 'DELETE')[1]
-    del login_session['access_token']
-    del login_session['facebook_id']
-    del login_session['username']
-    del login_session['email']
-    del login_session['picture']
-    del login_session['OAuth']
-    login_session['loggedIn'] = False
+    facebook_id = login_session.get('facebook_id')
+    # The access token must be included to successfully logout
+    access_token = login_session.get('access_token')
+    
+    if facebook_id and access_token:
+        url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
+            facebook_id, access_token)
+        result = requests.delete(url)
+        
+        # Only clear session if the logout was successful or if we get a valid response
+        if result.status_code == 200 or result.status_code == 400:
+            # 400 might mean already logged out, which is fine
+            if 'access_token' in login_session:
+                del login_session['access_token']
+            if 'facebook_id' in login_session:
+                del login_session['facebook_id']
+            if 'username' in login_session:
+                del login_session['username']
+            if 'email' in login_session:
+                del login_session['email']
+            if 'picture' in login_session:
+                del login_session['picture']
+            if 'OAuth' in login_session:
+                del login_session['OAuth']
+            login_session['loggedIn'] = False
+    
     return redirect('/')

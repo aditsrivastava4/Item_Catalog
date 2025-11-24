@@ -8,7 +8,6 @@ import string
 from Google.Google_OAuth import google
 from Facebook.FB_OAuth import facebook
 
-import httplib2
 import json
 from flask import make_response
 import requests
