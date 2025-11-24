@@ -110,7 +110,6 @@ It is the main module which is used to run the Flask server. All the routes of t
 * **flask** version 3.1.2
 * **google-auth** version 2.43.0
 * **google-auth-oauthlib** version 1.2.1
-* **httplib2** version 0.31.0
 * **requests** version 2.32.5
 * **SQLAlchemy** version 2.0.44
 * **passlib** version 1.7.4
