@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, render_template
 from flask import request, redirect, jsonify, url_for, flash
-import httplib2
 import requests
 import json
 import crud
@@ -73,8 +72,7 @@ def fbdisconnect():
     access_token = login_session['access_token']
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
         facebook_id, access_token)
-    h = httplib2.Http()
-    result = h.request(url, 'DELETE')[1]
+    result = requests.delete(url)
     del login_session['access_token']
     del login_session['facebook_id']
     del login_session['username']

@@ -107,13 +107,14 @@ It is the main module which is used to run the Flask server. All the routes of t
 
 ## Dependencies
 
-* **flask** version 1.0.2
-* **oauth2client** version 4.1.2
-* **httplib2** version 0.11.3
-* **requests** version 2.19.1
-* **SQLAlchemy** version 1.2.8
-* **passlib** version 1.7.1
-* **psycopg2** version 2.7.6.1
+* **flask** version 3.1.2
+* **google-auth** version 2.43.0
+* **google-auth-oauthlib** version 1.2.1
+* **httplib2** version 0.31.0
+* **requests** version 2.32.5
+* **SQLAlchemy** version 2.0.44
+* **passlib** version 1.7.4
+* **psycopg2-binary** version 2.9.11
 
 
 ## To Run
@@ -121,6 +122,8 @@ To run the server open the terminal
 First Clone the repo
 ```
 $ git clone https://github.com/aditsrivastava4/Item_Catalog.git
-$ cd Item_Catalog/src
+$ cd Item_Catalog
+$ pip install -r requirements.txt
+$ cd src
 $ python3 views.py
 ```
